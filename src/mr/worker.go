@@ -4,7 +4,7 @@ import "fmt"
 import "log"
 import "net/rpc"
 import "hash/fnv"
-
+import "time"
 
 //
 // Map functions return a slice of KeyValue.
@@ -24,7 +24,6 @@ func ihash(key string) int {
 	return int(h.Sum32() & 0x7fffffff)
 }
 
-
 //
 // main/mrworker.go calls this function.
 //
@@ -33,32 +32,37 @@ func Worker(mapf func(string, string) []KeyValue,
 
 	// Your worker implementation here.
 
-	// uncomment to send the Example RPC to the coordinator.
-	// CallExample()
-
+	for {
+		response := AskForWork()
+		log.Println(response)
+		if response.CommandType == MAP {
+			mapFile(response.FileToMap)
+		} else if response.CommandType == REDUCE {
+			reduceFile(response.ReducePos)
+		} else if response.CommandType == WAIT {
+			time.Sleep(100 * time.Millisecond)
+		} else if response.CommandType == EXIT {
+			break
+		} else {
+			panic("Wrong code")
+		}
+	}
 }
 
-//
-// example function to show how to make an RPC call to the coordinator.
-//
-// the RPC argument and reply types are defined in rpc.go.
-//
-func CallExample() {
+func mapFile(fileToMap string) {
+	log.Println("Map file : ", fileToMap)
+}
 
-	// declare an argument structure.
-	args := ExampleArgs{}
+func reduceFile(reducePos int) {
+	log.Printf("Reducing %d\n", reducePos)
+}
 
-	// fill in the argument(s).
-	args.X = 99
-
-	// declare a reply structure.
-	reply := ExampleReply{}
-
-	// send the RPC request, wait for the reply.
-	call("Coordinator.Example", &args, &reply)
-
-	// reply.Y should be 100.
-	fmt.Printf("reply.Y %v\n", reply.Y)
+func AskForWork() WorkerResponse {
+	args := WorkerRequest{}
+	reply := WorkerResponse{}
+	call("Coordinator.Work", &args, &reply)
+	log.Printf("Coordinator gave worker job %d\n", reply.CommandType)
+	return reply
 }
 
 //

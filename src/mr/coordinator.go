@@ -6,24 +6,18 @@ import "os"
 import "net/rpc"
 import "net/http"
 
-
 type Coordinator struct {
 	// Your definitions here.
-
+	filesMap map[string]bool
+	nReduce  int
 }
 
-// Your code here -- RPC handlers for the worker to call.
-
-//
-// an example RPC handler.
-//
-// the RPC argument and reply types are defined in rpc.go.
-//
-func (c *Coordinator) Example(args *ExampleArgs, reply *ExampleReply) error {
-	reply.Y = args.X + 1
+func (c *Coordinator) Work(args *WorkerRequest, reply *WorkerResponse) error {
+	reply.CommandType = MAP
+	reply.ReducePos = 2
+	reply.FileToMap = "hello.txt"
 	return nil
 }
-
 
 //
 // start a thread that listens for RPCs from worker.go
@@ -49,7 +43,7 @@ func (c *Coordinator) Done() bool {
 	ret := false
 
 	// Your code here.
-
+	log.Println("Done was called")
 
 	return ret
 }
@@ -60,10 +54,16 @@ func (c *Coordinator) Done() bool {
 // nReduce is the number of reduce tasks to use.
 //
 func MakeCoordinator(files []string, nReduce int) *Coordinator {
-	c := Coordinator{}
+	c := Coordinator{filesMap: make(map[string]bool), nReduce: nReduce}
 
 	// Your code here.
 
+	log.Println("Inside MakeCoordinator", files, nReduce)
+
+	c.nReduce = nReduce
+	for _, file := range files {
+		c.filesMap[file] = false
+	}
 
 	c.server()
 	return &c
