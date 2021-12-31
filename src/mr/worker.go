@@ -37,14 +37,16 @@ func Worker(mapf func(string, string) []KeyValue,
 		log.Println(response)
 		if response.CommandType == MAP {
 			mapFile(response.FileToMap)
+			ReportWorkDone(MAP, -1, response.FileToMap)
 		} else if response.CommandType == REDUCE {
 			reduceFile(response.ReducePos)
+			ReportWorkDone(REDUCE, response.ReducePos, "")
 		} else if response.CommandType == WAIT {
 			time.Sleep(100 * time.Millisecond)
 		} else if response.CommandType == EXIT {
 			break
 		} else {
-			panic("Wrong code")
+			panic("Wrong Map-Reduce Command")
 		}
 	}
 }
@@ -63,6 +65,17 @@ func AskForWork() WorkerResponse {
 	call("Coordinator.Work", &args, &reply)
 	log.Printf("Coordinator gave worker job %d\n", reply.CommandType)
 	return reply
+}
+
+func ReportWorkDone(command MRCommand, reduceTask int, mapFile string) {
+	args := WorkerDoneRequest{
+		CommandType:        command,
+		MappedFile:         mapFile,
+		ReduceTaskFinished: reduceTask,
+	}
+	reply := WorkerDoneResponse{}
+	call("Coordinator.ReportWorkDone", &args, &reply)
+	log.Print("Worker has reported finishing work ", args.CommandType)
 }
 
 //

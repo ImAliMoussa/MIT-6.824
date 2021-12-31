@@ -21,10 +21,18 @@ const (
 type WorkerRequest struct{}
 
 type WorkerResponse struct {
-	CommandType MRCommand
-	FileToMap   string
-	ReducePos   int
+	CommandType  MRCommand
+	FileToMap    string
+	ReducePos    int
 }
+
+type WorkerDoneRequest struct {
+	CommandType        MRCommand
+	MappedFile         string
+	ReduceTaskFinished int
+}
+
+type WorkerDoneResponse struct{}
 
 // Cook up a unique-ish UNIX-domain socket name
 // in /var/tmp, for the coordinator.

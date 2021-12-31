@@ -1,21 +1,106 @@
 package mr
 
-import "log"
-import "net"
-import "os"
-import "net/rpc"
-import "net/http"
+import (
+	"errors"
+	"log"
+	"net"
+	"net/http"
+	"net/rpc"
+	"os"
+	"sync"
+	"time"
+)
+
+type MapState struct {
+	allFiles         []string
+	readyFiles       map[string]bool
+	inProgressFiles  map[string]bool
+	mapPhaseFinished bool
+}
+
+type ReduceState struct {
+	nReduce             int
+	readyTasks          map[int]bool
+	inProgressTasks     map[int]bool
+	reducePhaseFinished bool
+}
 
 type Coordinator struct {
 	// Your definitions here.
-	filesMap map[string]bool
-	nReduce  int
+	mu     sync.Mutex
+	mState MapState
+	rState ReduceState
 }
 
 func (c *Coordinator) Work(args *WorkerRequest, reply *WorkerResponse) error {
-	reply.CommandType = MAP
-	reply.ReducePos = 2
-	reply.FileToMap = "hello.txt"
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	if c.rState.reducePhaseFinished {
+		reply.CommandType = EXIT
+	} else if c.mState.mapPhaseFinished {
+		// Reduce
+		if len(c.rState.readyTasks) == 0 {
+			reply.CommandType = WAIT
+		} else {
+			reduceTask := c.getTaskFromReduceReadyMap()
+
+			reply.CommandType = REDUCE
+			reply.ReducePos = reduceTask
+
+			time.AfterFunc(10*time.Second, func() {
+				c.mu.Lock()
+				defer c.mu.Unlock()
+				if c.rState.inProgressTasks[reduceTask] {
+					c.addTaskBackToReady(reduceTask)
+				}
+			})
+		}
+	} else {
+		// Map
+		if len(c.mState.readyFiles) == 0 {
+			reply.CommandType = WAIT
+		} else {
+			readyFile := c.getFileFromMapReadyMap()
+
+			reply.CommandType = MAP
+			reply.FileToMap = readyFile
+
+			time.AfterFunc(10*time.Second, func() {
+				c.mu.Lock()
+				defer c.mu.Unlock()
+				if c.mState.inProgressFiles[readyFile] {
+					log.Println("Adding", readyFile, "back to Ready because it wasn't completed")
+					c.addMapFileBackToReady(readyFile)
+				}
+			})
+		}
+	}
+	return nil
+}
+
+func (c *Coordinator) ReportWorkDone(args *WorkerDoneRequest, reply *WorkerDoneResponse) error {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	if args.CommandType == MAP {
+		delete(c.mState.inProgressFiles, args.MappedFile)
+		remainingMaps := c.getRemainingMaps()
+		log.Println("Remaining maps", remainingMaps)
+		if remainingMaps == 0 {
+			c.mState.mapPhaseFinished = true
+		}
+	} else if args.CommandType == REDUCE {
+		delete(c.rState.inProgressTasks, args.ReduceTaskFinished)
+		remainingTasks := c.getRemainingTasks()
+		log.Println("Remaining tasks", remainingTasks)
+		if remainingTasks == 0 {
+			c.rState.reducePhaseFinished = true
+		}
+	} else {
+		return errors.New("Wrong Worker Done Request")
+	}
+
 	return nil
 }
 
@@ -40,12 +125,22 @@ func (c *Coordinator) server() {
 // if the entire job has finished.
 //
 func (c *Coordinator) Done() bool {
-	ret := false
-
-	// Your code here.
 	log.Println("Done was called")
 
-	return ret
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	return c.rState.reducePhaseFinished
+}
+
+func (c *Coordinator) initDS() {
+	for _, file := range c.mState.allFiles {
+		c.mState.readyFiles[file] = true
+	}
+
+	for i := 1; i <= c.rState.nReduce; i++ {
+		c.rState.readyTasks[i] = true
+	}
 }
 
 //
@@ -54,16 +149,26 @@ func (c *Coordinator) Done() bool {
 // nReduce is the number of reduce tasks to use.
 //
 func MakeCoordinator(files []string, nReduce int) *Coordinator {
-	c := Coordinator{filesMap: make(map[string]bool), nReduce: nReduce}
+	mState := MapState{
+		allFiles:        files,
+		readyFiles:      make(map[string]bool),
+		inProgressFiles: make(map[string]bool),
+	}
 
-	// Your code here.
+	rState := ReduceState{
+		nReduce:    nReduce,
+		readyTasks: make(map[int]bool),
+		inProgressTasks: make(map[int]bool),
+	}
+
+	c := Coordinator{
+		mState: mState,
+		rState: rState,
+	}
+
+	c.initDS()
 
 	log.Println("Inside MakeCoordinator", files, nReduce)
-
-	c.nReduce = nReduce
-	for _, file := range files {
-		c.filesMap[file] = false
-	}
 
 	c.server()
 	return &c
