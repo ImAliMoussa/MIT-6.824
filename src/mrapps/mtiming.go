@@ -15,6 +15,7 @@ import "syscall"
 import "time"
 import "sort"
 import "io/ioutil"
+import "log"
 
 func nparallel(phase string) int {
 	// create a file so that other workers will see that
@@ -36,6 +37,7 @@ func nparallel(phase string) int {
 	if err != nil {
 		panic(err)
 	}
+	log.Printf("Worker %d found names: %s", pid, names)
 	ret := 0
 	for _, name := range names {
 		var xpid int
@@ -46,13 +48,18 @@ func nparallel(phase string) int {
 			if err == nil {
 				// if err == nil, xpid is alive.
 				ret += 1
+				if xpid != pid {
+					log.Printf("!!!!Worker %d has contacted worker %d\n", pid, xpid)
+				}
 			}
 		}
 	}
 	dd.Close()
+	log.Printf("Worker %d is going to sleep\n", pid)
 
 	time.Sleep(1 * time.Second)
 
+	log.Printf("Worker %d woke up\n", pid)
 	err = os.Remove(myfilename)
 	if err != nil {
 		panic(err)
@@ -75,6 +82,7 @@ func Map(filename string, contents string) []mr.KeyValue {
 	kva = append(kva, mr.KeyValue{
 		fmt.Sprintf("parallel-%v", pid),
 		fmt.Sprintf("%d", n)})
+	log.Println(pid, kva)
 	return kva
 }
 
@@ -82,6 +90,8 @@ func Reduce(key string, values []string) string {
 	//n := nparallel("reduce")
 
 	// sort values to ensure deterministic output.
+	pid := os.Getpid()
+	log.Printf("******************Worker %d got values %s", pid, values)
 	vv := make([]string, len(values))
 	copy(vv, values)
 	sort.Strings(vv)

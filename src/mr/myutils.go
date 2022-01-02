@@ -67,3 +67,12 @@ func (c *Coordinator) addMapFileBackToReady(file string) {
 	delete(c.mState.inProgressFiles, file)
 	c.mState.readyFiles[file] = true
 }
+
+func (c *Coordinator) findPosOfFile(filename string) int {
+	for idx, value := range c.mState.allFiles {
+		if value == filename {
+			return idx + 1
+		}
+	}
+	panic("File not found in all files")
+}

@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Remove any temporary files and any .so files from previous build
-rm mr-out* *.so
+rm mr-* mr-out* *.so
 
 set -e
 

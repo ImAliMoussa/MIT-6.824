@@ -21,9 +21,11 @@ const (
 type WorkerRequest struct{}
 
 type WorkerResponse struct {
-	CommandType  MRCommand
-	FileToMap    string
-	ReducePos    int
+	CommandType MRCommand
+	FileToMap   string
+	ReducePos   int
+	NReduce     int
+	MapTask     int
 }
 
 type WorkerDoneRequest struct {

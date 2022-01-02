@@ -47,6 +47,11 @@ func (c *Coordinator) Work(args *WorkerRequest, reply *WorkerResponse) error {
 
 			reply.CommandType = REDUCE
 			reply.ReducePos = reduceTask
+			reply.NReduce = c.rState.nReduce
+
+			if reduceTask < 1 || reduceTask > c.rState.nReduce {
+				panic("Why is reduceTask == 0")
+			}
 
 			time.AfterFunc(10*time.Second, func() {
 				c.mu.Lock()
@@ -65,6 +70,8 @@ func (c *Coordinator) Work(args *WorkerRequest, reply *WorkerResponse) error {
 
 			reply.CommandType = MAP
 			reply.FileToMap = readyFile
+			reply.NReduce = c.rState.nReduce
+			reply.MapTask = c.findPosOfFile(readyFile)
 
 			time.AfterFunc(10*time.Second, func() {
 				c.mu.Lock()
@@ -125,8 +132,6 @@ func (c *Coordinator) server() {
 // if the entire job has finished.
 //
 func (c *Coordinator) Done() bool {
-	log.Println("Done was called")
-
 	c.mu.Lock()
 	defer c.mu.Unlock()
 
@@ -156,8 +161,8 @@ func MakeCoordinator(files []string, nReduce int) *Coordinator {
 	}
 
 	rState := ReduceState{
-		nReduce:    nReduce,
-		readyTasks: make(map[int]bool),
+		nReduce:         nReduce,
+		readyTasks:      make(map[int]bool),
 		inProgressTasks: make(map[int]bool),
 	}
 

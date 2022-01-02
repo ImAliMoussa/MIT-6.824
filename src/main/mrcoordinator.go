@@ -14,6 +14,7 @@ import "time"
 import "os"
 import "fmt"
 import "log"
+import "io/ioutil"
 
 func main() {
 	if len(os.Args) < 2 {
@@ -24,6 +25,10 @@ func main() {
 	// Set logging flags
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime))
+	
+	if os.Getenv("TURN_OFF_LOGS") != "" {
+		log.SetOutput(ioutil.Discard)
+	}
 
 	m := mr.MakeCoordinator(os.Args[1:], 10)
 	for m.Done() == false {
