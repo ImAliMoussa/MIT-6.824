@@ -50,10 +50,10 @@ func (c *Coordinator) Work(args *WorkerRequest, reply *WorkerResponse) error {
 			reply.NReduce = c.rState.nReduce
 
 			if reduceTask < 1 || reduceTask > c.rState.nReduce {
-				panic("Why is reduceTask == 0")
+				panic("Wrong reduceTask position")
 			}
 
-			time.AfterFunc(10*time.Second, func() {
+			go time.AfterFunc(10*time.Second, func() {
 				c.mu.Lock()
 				defer c.mu.Unlock()
 				if c.rState.inProgressTasks[reduceTask] {
@@ -73,7 +73,7 @@ func (c *Coordinator) Work(args *WorkerRequest, reply *WorkerResponse) error {
 			reply.NReduce = c.rState.nReduce
 			reply.MapTask = c.findPosOfFile(readyFile)
 
-			time.AfterFunc(10*time.Second, func() {
+			go time.AfterFunc(10*time.Second, func() {
 				c.mu.Lock()
 				defer c.mu.Unlock()
 				if c.mState.inProgressFiles[readyFile] {

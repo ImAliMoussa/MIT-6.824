@@ -45,17 +45,11 @@ func (c *Coordinator) getTaskFromReduceReadyMap() int {
 }
 
 func (c *Coordinator) getRemainingMaps() int {
-	mapsCompleted := len(c.mState.allFiles) -
-		len(c.mState.readyFiles) -
-		len(c.mState.inProgressFiles)
-	return len(c.mState.allFiles) - mapsCompleted
+	return len(c.mState.readyFiles) + len(c.mState.inProgressFiles)
 }
 
 func (c *Coordinator) getRemainingTasks() int {
-	tasksCompleted := c.rState.nReduce -
-		len(c.rState.readyTasks) -
-		len(c.rState.inProgressTasks)
-	return c.rState.nReduce - tasksCompleted
+	return len(c.rState.readyTasks) + len(c.rState.inProgressTasks)
 }
 
 func (c *Coordinator) addTaskBackToReady(reduceTask int) {
