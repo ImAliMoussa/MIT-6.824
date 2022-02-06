@@ -1,13 +1,24 @@
 package raft
 
-import "log"
+import (
+	"log"
+	"fmt"
+	"runtime"
+)
 
 // Debugging
-const Debug = false
+const Debug = true
 
-func DPrintf(format string, a ...interface{}) (n int, err error) {
+func trace(a ...interface{}) {
 	if Debug {
-		log.Printf(format, a...)
+		yellow := "\033[33m"
+		reset := "\033[0m"
+		pc := make([]uintptr, 10)
+		runtime.Callers(2, pc)
+		f := runtime.FuncForPC(pc[0])
+		_, line := f.FileLine(pc[0])
+		log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime | log.Lshortfile))
+		s := fmt.Sprintln(a...)
+		log.Printf("%s%s@%d%s\n%s\n", yellow, f.Name(), line, reset, s)
 	}
-	return
 }
