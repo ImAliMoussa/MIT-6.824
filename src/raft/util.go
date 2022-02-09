@@ -1,8 +1,8 @@
 package raft
 
 import (
-	"log"
 	"fmt"
+	"log"
 	"runtime"
 )
 
