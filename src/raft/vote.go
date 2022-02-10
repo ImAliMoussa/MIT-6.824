@@ -60,13 +60,17 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	}
 
 	if args.Term > term {
+		rf.mu.Lock()
 		rf.follow(args.Term, -1)
+		rf.mu.Unlock()
 	}
-	
+
 	if (votedFor == -1 || votedFor == rf.me) && rf.isUpToDate(args) { // TODO this condition is wrong, refer to figure 2
 		reply.VoteGranted = true
 		// reset follower timer when follower grants a vote
+		rf.mu.Lock()
 		state, _ := rf.follow(args.Term, args.CandidateId)
+		rf.mu.Unlock()
 		if state == FOLLOWER {
 			rf.heartbeatCh <- true
 		}

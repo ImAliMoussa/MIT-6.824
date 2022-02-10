@@ -45,19 +45,25 @@ func (rf *Raft) startElection() {
 			votesMu.Lock()
 			defer votesMu.Unlock()
 
+			rf.mu.Lock()
+			defer rf.mu.Unlock()
 			if reply.VoteGranted {
 				votes++
+				if votes == 1+(rf.numPeers/2) {
+					trace("Leader win, server is", rf.me)
+					rf.wonElectonCh <- true
+				}
 			} else if currentTerm < reply.Term {
 				state, err := rf.follow(reply.Term, -1)
+				// rf.mu.Unlock()
 				if err == nil && (state == CANDIDATE) {
 					rf.stepDownCh <- true
 				}
 				return
 			}
+			// rf.mu.Unlock()
 
-			if votes > rf.numPeers/2 {
-				rf.wonElectonCh <- true
-			}
+			// If conditions is votes > rf.numPeers the channel would receive several times
 		}(i)
 	}
 

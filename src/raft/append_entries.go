@@ -16,15 +16,12 @@ type AppendEntriesResponse struct {
 
 func (rf *Raft) broadcastAppendEntries() {
 	rf.mu.Lock()
-	term := rf.currentTerm
-	commitIndex := rf.commitIndex
-	rf.mu.Unlock()
+	defer rf.mu.Unlock()
 	for server := 0; server < rf.numPeers; server++ {
 		if server != rf.me {
-			go rf.sendAppendEntries(server, term, commitIndex)
+			go rf.sendAppendEntries(server, rf.currentTerm, rf.commitIndex)
 		}
 	}
-	// TODO change commitIndex
 }
 
 // Issued by Leader to send AppendEntriesRPC to followers
@@ -45,7 +42,6 @@ func (rf *Raft) sendAppendEntries(server, term, commitIndex int) {
 	}
 	rf.mu.Unlock()
 
-
 	reply := AppendEntriesResponse{}
 	ok := rf.peers[server].Call("Raft.AppendEntries", &args, &reply)
 	trace("Server", rf.me, "has sent an append entry to", server,
@@ -54,7 +50,9 @@ func (rf *Raft) sendAppendEntries(server, term, commitIndex int) {
 		"\nReply:", reply.String())
 
 	if reply.Term > term {
+		rf.mu.Lock()
 		state, err := rf.follow(reply.Term, -1)
+		rf.mu.Unlock()
 		if err == nil && (state == LEADER || state == CANDIDATE) {
 			rf.stepDownCh <- true
 		}
@@ -82,8 +80,6 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 	rf.mu.Lock()
 	trace("Server", rf.me, "has acquired the lock")
 
-	// TODO what if this raft server is a leader?
-
 	// Reply false if term < currentTerm (§5.1)
 	oldTerm := args.Term < rf.currentTerm
 	// Reply false if log doesn’t contain an entry at prevLogIndex
@@ -91,11 +87,11 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 	differentTerms := (args.PrevLogIndex >= len(rf.log)) || (rf.log[args.PrevLogIndex].Term != args.PrevLogTerm)
 
 	reply.Term = rf.currentTerm
-	rf.mu.Unlock()
 
 	trace("Server", rf.me, "oldTerm", oldTerm, "differentTerms", differentTerms)
 	if oldTerm || differentTerms {
 		reply.Success = false
+		rf.mu.Unlock()
 		return
 	}
 
@@ -103,6 +99,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 
 	state, err := rf.follow(args.Term, -1)
 	if err == nil {
+		trace("Server", rf.me, "is going to send message in channel.\nState: ", state)
 		if state == FOLLOWER {
 			rf.heartbeatCh <- true
 		} else if state == LEADER || state == CANDIDATE {
@@ -111,4 +108,5 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 			panic("wrong state")
 		}
 	}
+	rf.mu.Unlock()
 }

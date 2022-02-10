@@ -4,8 +4,6 @@ import "errors"
 
 func (rf *Raft) follow(newTerm, votedFor int) (RfState, error) {
 	trace("Server", rf.me, "is trying to acquire lock")
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
 	trace("Server", rf.me, "has acquired the lock")
 
 	if newTerm < rf.currentTerm {

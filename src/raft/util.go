@@ -3,6 +3,7 @@ package raft
 import (
 	"fmt"
 	"log"
+	"os"
 	"runtime"
 )
 
@@ -10,7 +11,7 @@ import (
 const Debug = 1
 
 func trace(a ...interface{}) {
-	if Debug == 1 {
+	if Debug == 1 && os.Getenv("LOG") != "" {
 		yellow := "\033[33m"
 		reset := "\033[0m"
 		pc := make([]uintptr, 10)

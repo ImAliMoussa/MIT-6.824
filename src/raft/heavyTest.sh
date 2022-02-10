@@ -2,8 +2,9 @@
 
 set -e
 
-for i in  {1..200}
+for i in {1..200}
 do
-echo $i
-go test -run $1 -race > out
+		tput reset
+    echo $i
+    LOG=1 go test -run $1 -race > out
 done
