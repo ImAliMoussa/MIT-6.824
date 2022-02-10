@@ -22,6 +22,7 @@ import (
 	"math/rand"
 	"sync"
 	"time"
+
 	//	"6.824/labgob"
 	"6.824/labrpc"
 )
@@ -36,7 +37,7 @@ const (
 
 const (
 	// time in milliseconds
-	LEADER_TIMEOUT = 125 * time.Millisecond
+	LEADER_TIMEOUT = 60 * time.Millisecond
 )
 
 type LogEntry struct {
@@ -154,13 +155,13 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	return index, term, isLeader
 }
 func (rf *Raft) getElectionTimeout() time.Duration {
-	return time.Duration(200+rand.Intn(150)) * time.Millisecond
+	return time.Duration(200+rand.Intn(300)) * time.Millisecond
 }
 
 // The ticker go routine starts a new election if this peer hasn't received
 // heartsbeats recently.
 func (rf *Raft) ticker() {
-	for rf.killed() == false {
+	for !rf.killed() {
 		trace("Server", rf.me, "will try to acquire lock")
 
 		rf.mu.Lock()
@@ -181,9 +182,6 @@ func (rf *Raft) ticker() {
 
 		select {
 		case <-rf.heartbeatCh:
-			if state != FOLLOWER {
-				panic("Step down channel should've been selected")
-			}
 		case <-rf.stepDownCh:
 		case <-rf.wonElectonCh:
 			rf.stepUpToLeader()
@@ -238,10 +236,10 @@ func Make(peers []*labrpc.ClientEnd, me int,
 		// Channels have buffered space to not block
 		// which should avoid deadlock in some scenarios
 		applyCh:      applyCh,
-		stepDownCh:   make(chan bool, 1),
-		heartbeatCh:  make(chan bool, 1),
-		wonElectonCh: make(chan bool, 1),
-		killCh:       make(chan bool, 1),
+		stepDownCh:   make(chan bool, 100),
+		heartbeatCh:  make(chan bool, 100),
+		wonElectonCh: make(chan bool, 100),
+		killCh:       make(chan bool, 100),
 
 		state:    FOLLOWER,
 		numPeers: numPeers,

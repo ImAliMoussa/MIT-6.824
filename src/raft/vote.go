@@ -47,7 +47,6 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	rf.mu.Lock()
 	term := rf.currentTerm
 	votedFor := rf.votedFor
-	state := rf.state
 	rf.mu.Unlock()
 
 	trace("Server", rf.me, "has acquired the lock")
@@ -57,10 +56,17 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 
 	if args.Term < term {
 		reply.VoteGranted = false
-	} else if (votedFor == -1 || votedFor == rf.me) && rf.isUpToDate(args) { // TODO this condition is wrong, refer to figure 2
+		return
+	}
+
+	if args.Term > term {
+		rf.follow(args.Term, -1)
+	}
+	
+	if (votedFor == -1 || votedFor == rf.me) && rf.isUpToDate(args) { // TODO this condition is wrong, refer to figure 2
 		reply.VoteGranted = true
 		// reset follower timer when follower grants a vote
-		rf.followAndNotify(args.Term, args.CandidateId)
+		state, _ := rf.follow(args.Term, args.CandidateId)
 		if state == FOLLOWER {
 			rf.heartbeatCh <- true
 		}

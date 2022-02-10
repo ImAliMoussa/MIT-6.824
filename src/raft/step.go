@@ -1,6 +1,8 @@
 package raft
 
-func (rf *Raft) followAndNotify(newTerm, votedFor int) RfState {
+import "errors"
+
+func (rf *Raft) follow(newTerm, votedFor int) (RfState, error) {
 	trace("Server", rf.me, "is trying to acquire lock")
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
@@ -8,7 +10,7 @@ func (rf *Raft) followAndNotify(newTerm, votedFor int) RfState {
 
 	if newTerm < rf.currentTerm {
 		trace("Server", rf.me, "term:", rf.currentTerm, "newTerm:", newTerm, "votedFor:", votedFor)
-		panic("Don't step down for a lower term")
+		return "", errors.New("old message")
 	}
 
 	state := rf.state
@@ -16,7 +18,6 @@ func (rf *Raft) followAndNotify(newTerm, votedFor int) RfState {
 		trace("Server", rf.me, "is trying to trying to step down")
 		rf.state = FOLLOWER
 		rf.votedFor = votedFor
-		rf.stepDownCh <- true
 		trace("Server", rf.me, "has stepped down")
 	}
 
@@ -25,7 +26,7 @@ func (rf *Raft) followAndNotify(newTerm, votedFor int) RfState {
 		rf.currentTerm = newTerm
 	}
 
-	return state
+	return state, nil
 }
 
 func (rf *Raft) stepUpToCandidate() {

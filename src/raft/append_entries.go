@@ -29,6 +29,7 @@ func (rf *Raft) broadcastAppendEntries() {
 
 // Issued by Leader to send AppendEntriesRPC to followers
 func (rf *Raft) sendAppendEntries(server, term, commitIndex int) {
+	rf.mu.Lock()
 	nextLogIndex := rf.nextIndex[server]
 	previousLogIndex := nextLogIndex - 1
 	trace("Server", rf.me, "indexes:", nextLogIndex, previousLogIndex)
@@ -42,6 +43,8 @@ func (rf *Raft) sendAppendEntries(server, term, commitIndex int) {
 		Entries:      rf.log[nextLogIndex:len(rf.log)],
 		LeaderCommit: commitIndex,
 	}
+	rf.mu.Unlock()
+
 
 	reply := AppendEntriesResponse{}
 	ok := rf.peers[server].Call("Raft.AppendEntries", &args, &reply)
@@ -50,9 +53,12 @@ func (rf *Raft) sendAppendEntries(server, term, commitIndex int) {
 		"\nArgs:", args.String(),
 		"\nReply:", reply.String())
 
-	if reply.Term > rf.currentTerm {
-		rf.followAndNotify(reply.Term, -1)
-	} else if reply.Success == false && ok {
+	if reply.Term > term {
+		state, err := rf.follow(reply.Term, -1)
+		if err == nil && (state == LEADER || state == CANDIDATE) {
+			rf.stepDownCh <- true
+		}
+	} else if !reply.Success && ok {
 		// ok signals that the rpc successfully reached the server and reply.Success
 		// means the server rejected it
 		rf.nextIndex[server]--
@@ -95,5 +101,14 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 
 	reply.Success = true
 
-	rf.followAndNotify(args.Term, -1)
+	state, err := rf.follow(args.Term, -1)
+	if err == nil {
+		if state == FOLLOWER {
+			rf.heartbeatCh <- true
+		} else if state == LEADER || state == CANDIDATE {
+			rf.stepDownCh <- true
+		} else {
+			panic("wrong state")
+		}
+	}
 }
