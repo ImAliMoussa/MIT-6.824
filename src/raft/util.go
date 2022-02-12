@@ -11,7 +11,7 @@ import (
 const Debug = 1
 
 func trace(a ...interface{}) {
-	if Debug == 1 && os.Getenv("LOG") != "" {
+	if Debug == 1 && os.Getenv("LOG") == "1" {
 		yellow := "\033[33m"
 		reset := "\033[0m"
 		pc := make([]uintptr, 10)

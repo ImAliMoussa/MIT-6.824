@@ -1,7 +1,5 @@
 package raft
 
-import "sync"
-
 func (rf *Raft) getElectionArgs() *RequestVoteArgs {
 	trace("Candidate", rf.me, "trying to acquire")
 	rf.mu.Lock()
@@ -29,7 +27,6 @@ func (rf *Raft) startElection() {
 	currentTerm := args.Term
 
 	votes := 1
-	var votesMu sync.Mutex
 
 	for i := 0; i < rf.numPeers; i++ {
 		if i == rf.me {
@@ -42,28 +39,22 @@ func (rf *Raft) startElection() {
 
 			trace("Candidate", rf.me, "has received a response from server", i, "\nResponse:", reply)
 
-			votesMu.Lock()
-			defer votesMu.Unlock()
-
 			rf.mu.Lock()
 			defer rf.mu.Unlock()
 			if reply.VoteGranted {
 				votes++
+				// If conditions is votes > rf.numPeers the channel would receive several times
 				if votes == 1+(rf.numPeers/2) {
 					trace("Leader win, server is", rf.me)
 					rf.wonElectonCh <- true
 				}
 			} else if currentTerm < reply.Term {
 				state, err := rf.follow(reply.Term, -1)
-				// rf.mu.Unlock()
 				if err == nil && (state == CANDIDATE) {
 					rf.stepDownCh <- true
 				}
 				return
 			}
-			// rf.mu.Unlock()
-
-			// If conditions is votes > rf.numPeers the channel would receive several times
 		}(i)
 	}
 

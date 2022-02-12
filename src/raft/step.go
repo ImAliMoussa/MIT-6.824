@@ -2,7 +2,7 @@ package raft
 
 import "errors"
 
-func (rf *Raft) follow(newTerm, votedFor int) (RfState, error) {
+func (rf *Raft) follow(newTerm, votedFor int) (RaftState, error) {
 	trace("Server", rf.me, "is trying to acquire lock")
 	trace("Server", rf.me, "has acquired the lock")
 
@@ -27,7 +27,7 @@ func (rf *Raft) follow(newTerm, votedFor int) (RfState, error) {
 	return state, nil
 }
 
-func (rf *Raft) stepUpToCandidate() {
+func (rf *Raft) becomeCandidate() {
 	trace("Server", rf.me, "is trying to acquire lock")
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
@@ -41,8 +41,8 @@ func (rf *Raft) stepUpToCandidate() {
 // sends a heartbeat as specified by paper to let other
 // server know that there is a new leader.
 //
-func (rf *Raft) stepUpToLeader() {
-	trace("Leader", rf.me, "has been promoteToLeader")
+func (rf *Raft) lead() {
+	trace("Leader", rf.me, "has been promoted to leader")
 	trace("Server", rf.me, "is trying to acquire lock")
 
 	rf.mu.Lock()

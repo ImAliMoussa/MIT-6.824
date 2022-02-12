@@ -27,12 +27,12 @@ import (
 	"6.824/labrpc"
 )
 
-type RfState string
+type RaftState string
 
 const (
-	LEADER    RfState = "Leader"
-	FOLLOWER          = "Follower"
-	CANDIDATE         = "Candidate"
+	LEADER    RaftState = "Leader"
+	FOLLOWER  RaftState = "Follower"
+	CANDIDATE RaftState = "Candidate"
 )
 
 const (
@@ -97,7 +97,7 @@ type Raft struct {
 	heartbeatCh  chan bool
 	killCh       chan bool
 
-	state    RfState
+	state    RaftState
 	numPeers int
 }
 
@@ -155,6 +155,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 
 	return index, term, isLeader
 }
+
 func (rf *Raft) getElectionTimeout() time.Duration {
 	return time.Duration(200+rand.Intn(300)) * time.Millisecond
 }
@@ -185,14 +186,14 @@ func (rf *Raft) ticker() {
 		case <-rf.heartbeatCh:
 		case <-rf.stepDownCh:
 		case <-rf.wonElectonCh:
-			rf.stepUpToLeader()
+			rf.lead()
 		case <-rf.killCh:
 			// do nothing
 			// for loop condition will make program exit
 		case <-time.After(timeout):
 			trace("Server", rf.me, "has timed out")
 			if state == FOLLOWER {
-				rf.stepUpToCandidate()
+				rf.becomeCandidate()
 			}
 		}
 	}
