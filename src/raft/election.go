@@ -37,7 +37,7 @@ func (rf *Raft) startElection() {
 			reply := &RequestVoteReply{}
 			rf.sendRequestVote(i, args, reply)
 
-			trace("Candidate", rf.me, "has received a response from server", i, "\nResponse:", reply)
+			trace("Candidate", rf.me, "has received a response from server", i, "\nResponse:", reply, "for term", args.Term)
 
 			rf.mu.Lock()
 			defer rf.mu.Unlock()

@@ -12,12 +12,12 @@ func min(a, b int) int {
 	return b
 }
 
-func (a *AppendEntriesRequest) String() string {
+func (a AppendEntriesRequest) String() string {
 	out, _ := json.Marshal(a)
 	return string(out)
 }
 
-func (a *AppendEntriesResponse) String() string {
+func (a AppendEntriesResponse) String() string {
 	out, _ := json.Marshal(a)
 	return string(out)
 }

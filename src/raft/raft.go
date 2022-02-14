@@ -19,10 +19,10 @@ package raft
 
 import (
 	//	"bytes"
-	"github.com/sasha-s/go-deadlock"
+	// "github.com/sasha-s/go-deadlock"
 	"math/rand"
+	"sync"
 	"time"
-	// "sync"
 	//	"6.824/labgob"
 	"6.824/labrpc"
 )
@@ -72,8 +72,8 @@ type ApplyMsg struct {
 // A Go object implementing a single Raft peer.
 //
 type Raft struct {
-	// mu        sync.Mutex          // Lock to protect shared access to this peer's state
-	mu        deadlock.Mutex
+	mu sync.Mutex // Lock to protect shared access to this peer's state
+	// mu        deadlock.Mutex
 	peers     []*labrpc.ClientEnd // RPC end points of all peers
 	persister *Persister          // Object to hold this peer's persisted state
 	me        int                 // this peer's index into peers[]
@@ -111,7 +111,7 @@ func (rf *Raft) isUpToDate(args *RequestVoteArgs) bool {
 	lastTerm := rf.log[len(rf.log)-1].Term
 	lengthOfLog := len(rf.log)
 
-	return lastTerm <= args.LastLogTerm && lengthOfLog <= (1+args.LastLogIndex)
+	return lastTerm < args.LastLogTerm || lengthOfLog <= (1+args.LastLogIndex)
 }
 
 // return currentTerm and whether this server
@@ -147,11 +147,22 @@ func (rf *Raft) initializeVolatileState() {
 // the leader.
 //
 func (rf *Raft) Start(command interface{}) (int, int, bool) {
-	index := -1
-	term := -1
-	isLeader := true
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
 
-	// Your code here (2B).
+	index := len(rf.log)
+	term := rf.currentTerm
+	isLeader := rf.state == LEADER
+
+	if isLeader {
+		trace("Leader", rf.me, "has received a new command", command)
+		entry := LogEntry{
+			Term:    term,
+			Command: command,
+		}
+		rf.log = append(rf.log, entry)
+		go rf.broadcastAppendEntries()
+	}
 
 	return index, term, isLeader
 }
@@ -188,8 +199,6 @@ func (rf *Raft) ticker() {
 		case <-rf.wonElectonCh:
 			rf.lead()
 		case <-rf.killCh:
-			// do nothing
-			// for loop condition will make program exit
 		case <-time.After(timeout):
 			trace("Server", rf.me, "has timed out")
 			if state == FOLLOWER {
