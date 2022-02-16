@@ -28,7 +28,7 @@ func (rf *Raft) startElection() {
 
 	votes := 1
 
-	for i := 0; i < rf.numPeers; i++ {
+	for i := 0; i < rf.numPeers && !rf.killed(); i++ {
 		if i == rf.me {
 			continue
 		}
@@ -41,7 +41,7 @@ func (rf *Raft) startElection() {
 
 			rf.mu.Lock()
 			defer rf.mu.Unlock()
-			if reply.VoteGranted {
+			if reply.VoteGranted && !rf.killed() && rf.state == CANDIDATE {
 				votes++
 				// If conditions is votes > rf.numPeers the channel would receive several times
 				if votes == 1+(rf.numPeers/2) {

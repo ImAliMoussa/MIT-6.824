@@ -110,8 +110,10 @@ type Raft struct {
 func (rf *Raft) isUpToDate(args *RequestVoteArgs) bool {
 	lastTerm := rf.log[len(rf.log)-1].Term
 	lengthOfLog := len(rf.log)
-
-	return lastTerm < args.LastLogTerm || lengthOfLog <= (1+args.LastLogIndex)
+	if lastTerm != args.LastLogTerm {
+		return lastTerm < args.LastLogTerm
+	}
+	return lengthOfLog <= (1 + args.LastLogIndex)
 }
 
 // return currentTerm and whether this server

@@ -221,15 +221,19 @@ func TestFailNoAgree2B(t *testing.T) {
 
 	cfg.begin("Test (2B): no agreement if too many followers disconnect")
 
+	trace("tracing test")
 	cfg.one(10, servers, false)
 
 	// 3 of 5 followers disconnect
+	trace("tracing test")
 	leader := cfg.checkOneLeader()
 	cfg.disconnect((leader + 1) % servers)
 	cfg.disconnect((leader + 2) % servers)
 	cfg.disconnect((leader + 3) % servers)
 
+	trace("tracing test")
 	index, _, ok := cfg.rafts[leader].Start(20)
+	trace("tracing test")
 	if ok != true {
 		t.Fatalf("leader rejected Start()")
 	}
@@ -239,7 +243,9 @@ func TestFailNoAgree2B(t *testing.T) {
 
 	time.Sleep(2 * RaftElectionTimeout)
 
+	trace("tracing test")
 	n, _ := cfg.nCommitted(index)
+	trace("tracing test: n : ", n)
 	if n > 0 {
 		t.Fatalf("%v committed but no majority", n)
 	}

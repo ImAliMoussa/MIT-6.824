@@ -31,6 +31,7 @@ func (rf *Raft) updateIndexes(server, previousLogIndex, lengthEntries int) {
 	if newMatchIndex > rf.matchIndex[server] {
 		rf.matchIndex[server] = newMatchIndex
 		rf.nextIndex[server] = newMatchIndex + 1
+		rf.updateCommitIndex()
 	}
 }
 
@@ -87,21 +88,20 @@ func (rf *Raft) applyCommittedCommands() {
 func (rf *Raft) broadcastAppendEntries() {
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
-	rf.updateCommitIndex()
 	for server := 0; server < rf.numPeers; server++ {
 		if server != rf.me {
-			go rf.sendAppendEntries(server, rf.currentTerm, rf.commitIndex)
+			go rf.sendAppendEntries(server, rf.currentTerm)
 		}
 	}
 }
 
 // Issued by Leader to send AppendEntriesRPC to followers
-func (rf *Raft) sendAppendEntries(server, term, commitIndex int) {
-	for {
+func (rf *Raft) sendAppendEntries(server, term int) {
+	// TODO remove for loop and implement next index in reply
+	for !rf.killed() {
 		rf.mu.Lock()
 		nextLogIndex := rf.nextIndex[server]
 		previousLogIndex := nextLogIndex - 1
-		trace("Server", rf.me, "indexes:", nextLogIndex, previousLogIndex)
 		previousLogTerm := rf.log[previousLogIndex].Term
 
 		// clone entries to avoid race conditions
@@ -109,13 +109,15 @@ func (rf *Raft) sendAppendEntries(server, term, commitIndex int) {
 		entriesClone := make([]LogEntry, len(entriesSlice))
 		copy(entriesClone, entriesSlice)
 
+		trace("Server", rf.me, "nextLogIndex:", nextLogIndex, "previousLogIndex:", previousLogIndex, "enteries:", entriesClone)
+
 		args := AppendEntriesRequest{
 			Term:         term,
 			LeaderId:     rf.me,
 			PrevLogIndex: previousLogIndex,
 			PrevLogTerm:  previousLogTerm,
 			Entries:      entriesClone,
-			LeaderCommit: commitIndex,
+			LeaderCommit: rf.commitIndex,
 		}
 		rf.mu.Unlock()
 
@@ -144,7 +146,12 @@ func (rf *Raft) sendAppendEntries(server, term, commitIndex int) {
 				}
 				break
 			}
+			rf.mu.Lock()
 			rf.nextIndex[server]--
+			if rf.nextIndex[server] < 0 {
+				panic("Should always be non-negative")
+			}
+			rf.mu.Unlock()
 			trace("Leader", rf.me, "will retry sending append entry to", server)
 		}
 	}
