@@ -107,31 +107,9 @@ func (rf *Raft) applyCommittedCommands() {
 	rf.lastApplied = rf.commitIndex
 }
 
-//
-// Add a no-op command in order to commit commands from previous terms. Raft only allows
-// the leader to commit up to a command iff the command is from the currentTerm.
-//
-// Check if in the log there's a command from the current term. If not, then add one.
-//
-func (rf *Raft) addNoOpCommand() {
-	logLength := len(rf.log)
-	lastTerm := rf.log[logLength-1].Term
-	if lastTerm > rf.currentTerm {
-		panic("Why is last term more than rf.current term in addNoOpCommand?")
-	} else if lastTerm < rf.currentTerm {
-		noOperation := LogEntry{
-			Term:    rf.currentTerm,
-			Command: nil,
-		}
-		rf.log = append(rf.log, noOperation)
-	}
-}
-
 func (rf *Raft) broadcastAppendEntries() {
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
-
-	rf.addNoOpCommand()
 
 	for server := 0; server < rf.numPeers; server++ {
 		if server != rf.me {
