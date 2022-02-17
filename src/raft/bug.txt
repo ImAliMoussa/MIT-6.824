@@ -1,0 +1,3995 @@
+disconnect(0)
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+disconnect(1)
+disconnect(2)
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+connect(0)
+connect(1)
+connect(2)
+Test (2B): basic agreement ...
+6.824/raft.(*Raft).ticker@206
+Server 0 has timed out
+
+6.824/raft.(*Raft).becomeCandidate@32
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).becomeCandidate@36
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).getElectionArgs@5
+Candidate 0 trying to acquire
+
+6.824/raft.(*Raft).getElectionArgs@9
+Candidate 0 received lock in startElection
+
+6.824/raft.(*Raft).getElectionArgs@11
+Candidate 0 has incremented currentTerm
+
+6.824/raft.(*Raft).startElection.func1@37
+Candidate 0 sent a request vote to 1
+
+6.824/raft.(*Raft).startElection@62
+Server 0 exiting startElection
+
+6.824/raft.(*Raft).startElection.func1@37
+Candidate 0 sent a request vote to 2
+
+6.824/raft.(*Raft).RequestVote@47
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).RequestVote@47
+Server 2 is trying to acquire lock
+
+6.824/raft.(*RequestVoteArgs).String@28
+Server 1 has acquired the lock
+
+6.824/raft.(*RequestVoteArgs).String@28
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).becomeCandidate@32
+Server 2 is trying to acquire lock
+
+6.824/raft.(*Raft).RequestVote@55
+Server 1 has received a request vote {"Term":1,"CandidateId":0,"LastLogIndex":0,"LastLogTerm":0}
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).RequestVote@55
+Server 2 has received a request vote {"Term":1,"CandidateId":0,"LastLogIndex":0,"LastLogTerm":0}
+
+6.824/raft.(*Raft).follow@7
+Server 2 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@9
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).follow@24
+Server 1 has changed currentTerm
+
+6.824/raft.(*Raft).follow@24
+Server 2 has changed currentTerm
+
+6.824/raft.(*Raft).follow@7
+Server 2 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@9
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).RequestVote@72
+Server 2 replied to 0
+
+6.824/raft.(*Raft).RequestVote@72
+Server 1 replied to 0
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).becomeCandidate@36
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).getElectionArgs@5
+Candidate 2 trying to acquire
+
+6.824/raft.(*Raft).getElectionArgs@9
+Candidate 2 received lock in startElection
+
+6.824/raft.(*Raft).getElectionArgs@11
+Candidate 2 has incremented currentTerm
+
+6.824/raft.(*Raft).getElectionArgs@5
+Candidate 2 trying to acquire
+
+6.824/raft.(*Raft).getElectionArgs@9
+Candidate 2 received lock in startElection
+
+6.824/raft.(*Raft).startElection.func1@42
+Candidate 0 has received a response from server 1 
+Response: {"Term":0,"VoteGranted":true} for term 1
+
+6.824/raft.(*Raft).startElection.func1@49
+Leader win, server is 0
+
+6.824/raft.(*Raft).startElection.func1@37
+Candidate 2 sent a request vote to 0
+
+6.824/raft.(*Raft).lead@46
+Leader 0 has been promoted to leader
+
+6.824/raft.(*Raft).lead@48
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).startElection.func1@37
+Candidate 2 sent a request vote to 1
+
+6.824/raft.(*Raft).getElectionArgs@11
+Candidate 2 has incremented currentTerm
+
+6.824/raft.(*Raft).startElection@62
+Server 2 exiting startElection
+
+6.824/raft.(*Raft).lead@52
+Leader 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).startElection@62
+Server 2 exiting startElection
+
+6.824/raft.(*Raft).startElection.func1@42
+Candidate 0 has received a response from server 2 
+Response: {"Term":0,"VoteGranted":true} for term 1
+
+6.824/raft.(*Raft).Start@165
+Leader 0 has received a new command 100
+
+6.824/raft.(*Raft).RequestVote@47
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).startElection.func1@37
+Candidate 2 sent a request vote to 0
+
+6.824/raft.(*Raft).startElection.func1@37
+Candidate 2 sent a request vote to 1
+
+6.824/raft.(*Raft).RequestVote@47
+Server 0 is trying to acquire lock
+
+6.824/raft.(*RequestVoteArgs).String@28
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 0 nextLogIndex: 1 previousLogIndex: 0 enteries: [{1 100}]
+
+6.824/raft.(*Raft).RequestVote@55
+Server 1 has received a request vote {"Term":2,"CandidateId":2,"LastLogIndex":0,"LastLogTerm":0}
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@24
+Server 1 has changed currentTerm
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).RequestVote@72
+Server 1 replied to 2
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 0 nextLogIndex: 1 previousLogIndex: 0 enteries: [{1 100}]
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 0 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).startElection.func1@42
+Candidate 2 has received a response from server 1 
+Response: {"Term":1,"VoteGranted":true} for term 2
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 0 is going to send an append entry to server 2
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 0 nextLogIndex: 1 previousLogIndex: 0 enteries: [{1 100}]
+
+6.824/raft.(*Raft).RequestVote@47
+Server 1 is trying to acquire lock
+
+6.824/raft.(*RequestVoteArgs).String@28
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).RequestVote@55
+Server 0 has received a request vote {"Term":2,"CandidateId":2,"LastLogIndex":0,"LastLogTerm":0}
+
+6.824/raft.(*RequestVoteArgs).String@28
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).follow@17
+Server 0 is trying to trying to step down
+
+6.824/raft.(*Raft).follow@22
+Server 0 has stepped down
+
+6.824/raft.(*Raft).follow@24
+Server 0 has changed currentTerm
+
+6.824/raft.(*Raft).RequestVote@72
+Server 0 replied to 2
+
+6.824/raft.(*Raft).RequestVote@47
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 0 nextLogIndex: 1 previousLogIndex: 0 enteries: [{1 100}]
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 0 is going to send an append entry to server 1
+
+6.824/raft.(*RequestVoteArgs).String@28
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).RequestVote@55
+Server 0 has received a request vote {"Term":3,"CandidateId":2,"LastLogIndex":0,"LastLogTerm":0}
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).startElection.func1@42
+Candidate 2 has received a response from server 0 
+Response: {"Term":1,"VoteGranted":false} for term 2
+
+6.824/raft.(*Raft).RequestVote@55
+Server 1 has received a request vote {"Term":3,"CandidateId":2,"LastLogIndex":0,"LastLogTerm":0}
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@24
+Server 1 has changed currentTerm
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 2 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 0 is going to send an append entry to server 2
+
+6.824/raft.(*Raft).follow@24
+Server 0 has changed currentTerm
+
+6.824/raft.(*Raft).RequestVote@72
+Server 1 replied to 2
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm true differentTerms false
+
+6.824/raft.(*Raft).RequestVote@72
+Server 0 replied to 2
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm true differentTerms false
+
+6.824/raft.(*Raft).startElection.func1@42
+Candidate 2 has received a response from server 1 
+Response: {"Term":2,"VoteGranted":true} for term 3
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 2 oldTerm true differentTerms false
+
+6.824/raft.(*Raft).startElection.func1@49
+Leader win, server is 2
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).lead@46
+Leader 2 has been promoted to leader
+
+6.824/raft.(*Raft).startElection.func1@42
+Candidate 2 has received a response from server 0 
+Response: {"Term":2,"VoteGranted":false} for term 3
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 2 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 2 oldTerm true differentTerms false
+
+6.824/raft.(*Raft).lead@48
+Server 2 is trying to acquire lock
+
+6.824/raft.(*Raft).lead@52
+Leader 2 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 0 has sent an append entry to 2 
+Ok: true 
+Args: {"Term":1,"LeaderId":0,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[{"Term":1,"Command":100}],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":false,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 0 has sent an append entry to 2 
+Ok: true 
+Args: {"Term":1,"LeaderId":0,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[{"Term":1,"Command":100}],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":false,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 0 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":1,"LeaderId":0,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[{"Term":1,"Command":100}],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":false,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 0 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":1,"LeaderId":0,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[{"Term":1,"Command":100}],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":false,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 0 has finished append entries to 2
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 0 has finished append entries to 2
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 0 has finished append entries to 1
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 0 has finished append entries to 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).ticker@206
+Server 2 has timed out
+
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 1
+
+6.824/raft.(*Raft).sendAppendEntries@135
+Server 2 nextLogIndex: 1 previousLogIndex: 0 enteries: []
+
+6.824/raft.(*Raft).sendAppendEntries@147
+Server 2 is going to send an append entry to server 0
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 1 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@175
+Server 0 is tying to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 1 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@177
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@180
+Server 0 oldTerm false differentTerms false
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 1 
+Logs: [{0 <nil>}] 
+Commit index: 0
+
+6.824/raft.(*Raft).AppendEntries@231
+Server 0 
+Logs: [{0 <nil>} {1 100}] 
+Commit index: 0
+
+6.824/raft.(*Raft).follow@7
+Server 1 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).follow@7
+Server 0 is trying to acquire lock
+
+6.824/raft.(*Raft).follow@9
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 1 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).AppendEntries@236
+Server 0 is going to send message in channel.
+State:  Follower
+
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 1 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 1 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 1
+
+6.824/raft.(*Raft).sendAppendEntries@153
+Server 2 has sent an append entry to 0 
+Ok: true 
+Args: {"Term":3,"LeaderId":2,"PrevLogIndex":0,"PrevLogTerm":0,"Entries":[],"LeaderCommit":0} 
+Reply: {"Term":3,"Success":true,"ConflictLogIndex":0,"ConflictLogTerm":0}
+
+6.824/raft.(*Raft).updateIndexes@30
+Leader 2 updating match index of server 0 
+Old: 0 
+New: 0
+
+6.824/raft.(*Raft).sendAppendEntries@171
+Server 2 has finished append entries to 0
+
+6.824/raft.(*Raft).Kill@23
+Server 0 kill signal was received
+
+6.824/raft.(*Raft).Kill@23
+Server 1 kill signal was received
+
+6.824/raft.(*Raft).ticker@212
+Server 1 has exited properly
+
+6.824/raft.(*Raft).Kill@23
+Server 2 kill signal was received
+
+6.824/raft.(*Raft).ticker@212
+Server 0 has exited properly
+
+6.824/raft.(*Raft).ticker@212
+Server 2 has exited properly
+
+--- FAIL: TestBasicAgree2B (2.29s)
+    config.go:546: one(100) failed to reach agreement
+disconnect(0)
+6.824/raft.(*Raft).ticker@182
+Server 0 will try to acquire lock
+
+disconnect(1)
+6.824/raft.(*Raft).ticker@188
+Server 0 has acquired the lock
+
+6.824/raft.(*Raft).ticker@182
+Server 1 will try to acquire lock
+
+6.824/raft.(*Raft).ticker@188
+Server 1 has acquired the lock
+
+disconnect(2)
+6.824/raft.(*Raft).ticker@182
+Server 2 will try to acquire lock
+
+connect(0)
+6.824/raft.(*Raft).ticker@188
+Server 2 has acquired the lock
+
+connect(1)
+connect(2)

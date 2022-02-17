@@ -54,11 +54,6 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 
 	reply.Term = term
 
-	if args.Term < term {
-		reply.VoteGranted = false
-		return
-	}
-
 	if args.Term > term {
 		rf.follow(args.Term, -1)
 	}

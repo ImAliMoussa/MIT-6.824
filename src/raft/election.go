@@ -28,6 +28,9 @@ func (rf *Raft) startElection() {
 
 	votes := 1
 
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+
 	for i := 0; i < rf.numPeers && !rf.killed(); i++ {
 		if i == rf.me {
 			continue
@@ -41,7 +44,15 @@ func (rf *Raft) startElection() {
 
 			rf.mu.Lock()
 			defer rf.mu.Unlock()
-			if reply.VoteGranted && !rf.killed() && rf.state == CANDIDATE {
+
+			//
+			// Check state hasn't changed since sending the RPC
+			//
+			if rf.currentTerm != args.Term || rf.state != CANDIDATE || rf.killed() {
+				return
+			}
+
+			if reply.VoteGranted {
 				votes++
 				// If conditions is votes > rf.numPeers the channel would receive several times
 				if votes == 1+(rf.numPeers/2) {
