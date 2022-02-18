@@ -1,9 +1,5 @@
 package raft
 
-import (
-	"encoding/json"
-)
-
 //
 // example RequestVote RPC arguments structure.
 // field names must start with capital letters!
@@ -22,16 +18,6 @@ type RequestVoteArgs struct {
 type RequestVoteReply struct {
 	Term        int  // currentTerm, for candidate to update itself
 	VoteGranted bool // true means candidate received vote
-}
-
-func (r *RequestVoteArgs) String() string {
-	out, _ := json.Marshal(r)
-	return string(out)
-}
-
-func (r *RequestVoteReply) String() string {
-	out, _ := json.Marshal(r)
-	return string(out)
 }
 
 //

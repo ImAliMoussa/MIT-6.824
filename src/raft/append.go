@@ -55,37 +55,18 @@ func (rf *Raft) updateCommitIndex() {
 	sort.Ints(arr)
 	newCommitIndex := arr[rf.numPeers/2]
 
-	/*
-		for N := len(rf.log) - 1; N >= 0; N-- {
-			if rf.log[N].Term != rf.currentTerm {
-				break
-			}
-			group := 1 // group includes leader
-			for i := 0; i < rf.numPeers; i++ {
-				if i == rf.me {
-					continue
-				}
-				if rf.matchIndex[i] >= N {
-					group++
-				}
-			}
-			trace("Server", rf.me, "with N =", N, "and group", group)
-			if group > (rf.numPeers / 2) {
-				if N != newCommitIndex {
-					errMsg := fmt.Sprintln("Server:", rf.me, "faulty logic in sorting code N:", N, "newCommitIndex:", newCommitIndex, "lengthLog:", len(rf.log), rf.matchIndex)
-					panic(errMsg)
-				}
-				break
-			}
-		}
-	*/
+	trace("Leader", rf.me,
+		"\nNew commit index:", newCommitIndex,
+		"\nOld commit index:", rf.commitIndex,
+		"\nMatch indexes:", rf.matchIndex,
+		"\nLogs:", rf.log,
+	)
 	// A leader is not allowed to update commitIndex to somewhere in a previous term
 	// (or, for that matter, a future term). Thus, as
 	// the rule says, you specifically need to check that log[N].term == currentTerm. This is because Raft leaders cannot
 	// be sure an entry is actually committed (and will not ever be changed
 	// in the future) if it’s not from their current term.
 	// This is illustrated by Figure 8
-	trace("Leader", rf.me, "with logs:\n", rf.log, "\nNew commit index:", newCommitIndex, "\nOld commit index:", rf.commitIndex, "\nMatch indexes:", rf.matchIndex, "\nLogs:", rf.log)
 	if newCommitIndex > rf.commitIndex && rf.log[newCommitIndex].Term == rf.currentTerm {
 		rf.commitIndex = newCommitIndex
 		trace("Leader", rf.me, "updated commit index to", rf.commitIndex)

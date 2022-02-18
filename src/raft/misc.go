@@ -21,3 +21,13 @@ func (a AppendEntriesResponse) String() string {
 	out, _ := json.Marshal(a)
 	return string(out)
 }
+
+func (r *RequestVoteArgs) String() string {
+	out, _ := json.Marshal(r)
+	return string(out)
+}
+
+func (r *RequestVoteReply) String() string {
+	out, _ := json.Marshal(r)
+	return string(out)
+}
