@@ -21,6 +21,31 @@ import (
 // (much more than the paper's range of timeouts).
 const RaftElectionTimeout = 1000 * time.Millisecond
 
+func TestMyPersistCode(t *testing.T) {
+	servers := 3
+	cfg := make_config(t, 3, false, false)
+	defer cfg.cleanup()
+
+	cfg.begin("Test persistence code")
+
+	leaderIndex := cfg.checkOneLeader()
+	leader := cfg.rafts[leaderIndex]
+
+	leader.Start(10)
+	time.Sleep(RaftElectionTimeout)
+
+	leader.Persist()
+	data := leader.Persistor().ReadRaftState()
+	leader.ReadPersist(data)
+
+	nd, _ := cfg.nCommitted(1)
+	if nd != servers {
+		t.Fatalf("Something went wrong. Command not committed on all.")
+	}
+
+	cfg.end()
+}
+
 func TestInitialElection2A(t *testing.T) {
 	servers := 3
 	cfg := make_config(t, servers, false, false)

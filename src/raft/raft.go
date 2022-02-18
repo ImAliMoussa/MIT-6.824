@@ -258,11 +258,8 @@ func Make(peers []*labrpc.ClientEnd, me int,
 		numPeers: numPeers,
 	}
 
-	// TODO Reinitialize on elections
-	rf.initializeVolatileState()
-
 	// initialize from state persisted before a crash
-	rf.readPersist(persister.ReadRaftState())
+	rf.ReadPersist(persister.ReadRaftState())
 
 	// start ticker goroutine to start elections
 	go rf.ticker()
