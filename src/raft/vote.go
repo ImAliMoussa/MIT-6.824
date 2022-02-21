@@ -41,16 +41,17 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	}
 
 	if args.Term > term {
-		rf.follow(args.Term, -1)
+		state := rf.follow(args.Term)
+		rf.votedFor = -1
+		if state == FOLLOWER {
+			rf.heartbeatCh <- true
+		}
 	}
 
 	if (votedFor == -1 || votedFor == rf.me) && rf.isUpToDate(args) {
 		reply.VoteGranted = true
 		// reset follower timer when follower grants a vote
-		state, _ := rf.follow(args.Term, args.CandidateId)
-		if state == FOLLOWER {
-			rf.heartbeatCh <- true
-		}
+		rf.follow(args.Term)
 	}
 
 	rf.Persist()

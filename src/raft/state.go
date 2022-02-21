@@ -1,25 +1,22 @@
 package raft
 
-import "errors"
-
-func (rf *Raft) follow(newTerm, votedFor int) (RaftState, error) {
+func (rf *Raft) follow(newTerm int) RaftState {
 	if newTerm < rf.currentTerm {
-		return "", errors.New("old message")
+		return ""
 	}
 
 	state := rf.state
 	if state != FOLLOWER {
 		rf.state = FOLLOWER
-		trace("Server", rf.me, "has stepped down and voted for", rf.votedFor)
+		trace("Server", rf.me, "has stepped down")
 	}
 
 	if newTerm > rf.currentTerm {
-		trace("Server", rf.me, "has changed currentTerm to", rf.currentTerm)
 		rf.currentTerm = newTerm
-		rf.votedFor = votedFor
+		trace("Server", rf.me, "has changed currentTerm to", rf.currentTerm)
 	}
 
-	return state, nil
+	return state
 }
 
 func (rf *Raft) becomeCandidate() {

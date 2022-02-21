@@ -138,10 +138,12 @@ func (rf *Raft) sendAppendEntries(server, term int) {
 
 	reply := AppendEntriesResponse{}
 	ok := rf.peers[server].Call("Raft.AppendEntries", &args, &reply)
-	trace("Server", rf.me, "has sent an append entry to server", server,
-		"\nOk:", ok,
-		"\nArgs:", args.String(),
-		"\nReply:", reply.String())
+	if ok {
+		trace("Server", rf.me, "has sent an append entry to server", server,
+			"\nOk:", ok,
+			"\nArgs:", args.String(),
+			"\nReply:", reply.String())
+	}
 
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
@@ -152,8 +154,9 @@ func (rf *Raft) sendAppendEntries(server, term int) {
 	} else if ok {
 		// Successful RPC request & response but operation failed
 		if reply.Term > term {
-			state, err := rf.follow(reply.Term, -1)
-			if err == nil && (state == LEADER || state == CANDIDATE) {
+			state := rf.follow(reply.Term)
+			rf.votedFor = -1
+			if state == LEADER || state == CANDIDATE {
 				rf.stepDownCh <- true
 			}
 		} else {
@@ -230,20 +233,21 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 
 	trace("Server", rf.me, "\nLogs:", rf.log, "\nCommit index:", rf.commitIndex)
 
-	state, err := rf.follow(args.Term, -1)
+	if args.Term > rf.currentTerm {
+		rf.votedFor = -1
+	}
+	state := rf.follow(args.Term)
 
 	rf.Persist()
 
 	go rf.applyCommittedCommands()
 
-	if err == nil {
-		if state == FOLLOWER {
-			rf.heartbeatCh <- true
-		} else if state == LEADER || state == CANDIDATE {
-			rf.stepDownCh <- true
-		} else {
-			panic("wrong state")
-		}
+	if state == FOLLOWER {
+		rf.heartbeatCh <- true
+	} else if state == LEADER || state == CANDIDATE {
+		rf.stepDownCh <- true
+	} else {
+		panic("wrong state")
 	}
 }
 
@@ -257,16 +261,23 @@ func (rf *Raft) updateNextIndex(server int, reply *AppendEntriesResponse) {
 		panic("This shouldn't be happening")
 	}
 
-	found := false
 	for index := len(rf.log) - 1; index >= 0; index-- {
 		if rf.log[index].Term == reply.ConflictLogTerm {
-			found = true
 			rf.nextIndex[server] = index + 1
+			return
 		}
 	}
 
-	if !found {
+	/*
+		if rf.nextIndex[server] == reply.ConflictLogIndex {
+			panic("Conflict log index can't be the same as next index")
+		}
+	*/
+
+	if rf.nextIndex[server] != reply.ConflictLogIndex {
 		rf.nextIndex[server] = reply.ConflictLogIndex
+	} else {
+		rf.nextIndex[server]--
 	}
 }
 

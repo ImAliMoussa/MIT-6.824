@@ -61,9 +61,10 @@ func (rf *Raft) startElection() {
 					rf.wonElectonCh <- true
 				}
 			} else if currentTerm < reply.Term {
-				state, err := rf.follow(reply.Term, -1)
+				state := rf.follow(reply.Term)
+				rf.votedFor = -1
 				rf.Persist()
-				if err == nil && (state == CANDIDATE) {
+				if state == CANDIDATE {
 					rf.stepDownCh <- true
 				}
 				return
