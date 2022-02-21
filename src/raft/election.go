@@ -1,14 +1,11 @@
 package raft
 
 func (rf *Raft) getElectionArgs() *RequestVoteArgs {
-	trace("Candidate", rf.me, "trying to acquire")
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
-	trace("Candidate", rf.me, "received lock in startElection")
-
 	rf.currentTerm++
-	trace("Candidate", rf.me, "has incremented currentTerm")
 	rf.votedFor = rf.me
+	trace("Server", rf.me, "has with new currentTerm", rf.currentTerm, "in start election and voted for self")
+
+	rf.Persist()
 
 	lengthOfLog := len(rf.log)
 
@@ -23,24 +20,28 @@ func (rf *Raft) getElectionArgs() *RequestVoteArgs {
 }
 
 func (rf *Raft) startElection() {
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
+
+	trace("Server", rf.me, "has started an election")
+
 	args := rf.getElectionArgs()
 	currentTerm := args.Term
 
 	votes := 1
 
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
-
 	for i := 0; i < rf.numPeers && !rf.killed(); i++ {
 		if i == rf.me {
 			continue
 		}
-		go func(i int) {
-			trace("Candidate", rf.me, "sent a request vote to", i)
+		go func(server int) {
 			reply := &RequestVoteReply{}
-			rf.sendRequestVote(i, args, reply)
+			rf.sendRequestVote(server, args, reply)
 
-			trace("Candidate", rf.me, "has received a response from server", i, "\nResponse:", reply, "for term", args.Term)
+			trace("Server", rf.me, "has received a response from server", server,
+				"\nArgs:", args,
+				"\nResponse:", reply,
+			)
 
 			rf.mu.Lock()
 			defer rf.mu.Unlock()
@@ -56,11 +57,12 @@ func (rf *Raft) startElection() {
 				votes++
 				// If conditions is votes > rf.numPeers the channel would receive several times
 				if votes == 1+(rf.numPeers/2) {
-					trace("Leader win, server is", rf.me)
+					trace("Leader win, new leader is:", rf.me)
 					rf.wonElectonCh <- true
 				}
 			} else if currentTerm < reply.Term {
 				state, err := rf.follow(reply.Term, -1)
+				rf.Persist()
 				if err == nil && (state == CANDIDATE) {
 					rf.stepDownCh <- true
 				}
@@ -68,6 +70,4 @@ func (rf *Raft) startElection() {
 			}
 		}(i)
 	}
-
-	trace("Server", rf.me, "exiting startElection")
 }

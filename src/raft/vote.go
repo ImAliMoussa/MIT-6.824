@@ -27,18 +27,18 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// Reply false if term < currentTerm (¬ß5.1)
 	// 2. If votedFor is null or candidateId, and candidate‚Äôs log is at
 	// least as up-to-date as receiver‚Äôs log, grant vote (¬ß5.2, ¬ß5.4)
-
-	trace("Server", rf.me, "is trying to acquire lock")
-
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 	term := rf.currentTerm
 	votedFor := rf.votedFor
 
-	trace("Server", rf.me, "has acquired the lock")
-	trace("Server", rf.me, "has received a request vote", args.String())
-
 	reply.Term = term
+	reply.VoteGranted = false
+
+	if args.Term < term {
+		reply.VoteGranted = false
+		return
+	}
 
 	if args.Term > term {
 		rf.follow(args.Term, -1)
@@ -51,10 +51,9 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 		if state == FOLLOWER {
 			rf.heartbeatCh <- true
 		}
-	} else {
-		reply.VoteGranted = false
 	}
-	trace("Server", rf.me, "replied to", args.CandidateId)
+
+	rf.Persist()
 }
 
 //
@@ -87,6 +86,7 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 // the struct itself.
 //
 func (rf *Raft) sendRequestVote(server int, args *RequestVoteArgs, reply *RequestVoteReply) bool {
+	trace("Server", rf.me, "sent request vote to server", server)
 	ok := rf.peers[server].Call("Raft.RequestVote", args, reply)
 	return ok
 }

@@ -11,9 +11,6 @@ import (
 // see paper's Figure 2 for a description of what should be persistent.
 //
 func (rf *Raft) Persist() {
-	rf.mu.Lock()
-	defer rf.mu.Unlock()
-
 	buffer := new(bytes.Buffer)
 
 	e := labgob.NewEncoder(buffer)

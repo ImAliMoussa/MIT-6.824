@@ -24,7 +24,6 @@ type AppendEntriesResponse struct {
 
 func (rf *Raft) updateIndexes(server, previousLogIndex, lengthEntries int) {
 	newMatchIndex := previousLogIndex + lengthEntries
-	trace("Leader", rf.me, "updating match index of server", server, "\nOld:", rf.matchIndex[server], "\nNew:", newMatchIndex)
 
 	// sanity check
 	if newMatchIndex > rf.matchIndex[server] {
@@ -55,12 +54,6 @@ func (rf *Raft) updateCommitIndex() {
 	sort.Ints(arr)
 	newCommitIndex := arr[rf.numPeers/2]
 
-	trace("Leader", rf.me,
-		"\nNew commit index:", newCommitIndex,
-		"\nOld commit index:", rf.commitIndex,
-		"\nMatch indexes:", rf.matchIndex,
-		"\nLogs:", rf.log,
-	)
 	// A leader is not allowed to update commitIndex to somewhere in a previous term
 	// (or, for that matter, a future term). Thus, as
 	// the rule says, you specifically need to check that log[N].term == currentTerm. This is because Raft leaders cannot
@@ -69,7 +62,7 @@ func (rf *Raft) updateCommitIndex() {
 	// This is illustrated by Figure 8
 	if newCommitIndex > rf.commitIndex && rf.log[newCommitIndex].Term == rf.currentTerm {
 		rf.commitIndex = newCommitIndex
-		trace("Leader", rf.me, "updated commit index to", rf.commitIndex)
+		trace("Server", rf.me, "updated commit index to", rf.commitIndex)
 		go rf.applyCommittedCommands()
 	}
 }
@@ -77,6 +70,7 @@ func (rf *Raft) updateCommitIndex() {
 func (rf *Raft) applyCommittedCommands() {
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
+	trace("Server", rf.me, "commit index:", rf.commitIndex)
 	for i := rf.lastApplied; i <= rf.commitIndex; i++ {
 		applyMsg := ApplyMsg{
 			CommandValid: true,
@@ -84,6 +78,7 @@ func (rf *Raft) applyCommittedCommands() {
 			CommandIndex: i,
 		}
 		rf.applyCh <- applyMsg
+		trace("Server", rf.me, "applied index", i, "command:", applyMsg.Command)
 	}
 	rf.lastApplied = rf.commitIndex
 }
@@ -91,6 +86,10 @@ func (rf *Raft) applyCommittedCommands() {
 func (rf *Raft) broadcastAppendEntries() {
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
+
+	rf.Persist()
+
+	trace("Server", rf.me, "is broadcasting append entries for term", rf.currentTerm)
 
 	for server := 0; server < rf.numPeers; server++ {
 		if server != rf.me {
@@ -127,8 +126,6 @@ func (rf *Raft) sendAppendEntries(server, term int) {
 	entriesClone := make([]LogEntry, len(entriesSlice))
 	copy(entriesClone, entriesSlice)
 
-	trace("Server", rf.me, "nextLogIndex:", nextLogIndex, "previousLogIndex:", previousLogIndex, "enteries:", entriesClone)
-
 	args := AppendEntriesRequest{
 		Term:         term,
 		LeaderId:     rf.me,
@@ -140,9 +137,8 @@ func (rf *Raft) sendAppendEntries(server, term int) {
 	rf.mu.Unlock()
 
 	reply := AppendEntriesResponse{}
-	trace("Server", rf.me, "is going to send an append entry to server", server)
 	ok := rf.peers[server].Call("Raft.AppendEntries", &args, &reply)
-	trace("Server", rf.me, "has sent an append entry to", server,
+	trace("Server", rf.me, "has sent an append entry to server", server,
 		"\nOk:", ok,
 		"\nArgs:", args.String(),
 		"\nReply:", reply.String())
@@ -164,13 +160,12 @@ func (rf *Raft) sendAppendEntries(server, term int) {
 			rf.updateNextIndex(server, &reply)
 		}
 	}
-	trace("Server", rf.me, "has finished append entries to", server)
+
+	rf.Persist()
 }
 
 func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesResponse) {
-	trace("Server", rf.me, "is tying to acquire lock")
 	rf.mu.Lock()
-	trace("Server", rf.me, "has acquired the lock")
 	defer rf.mu.Unlock()
 
 	// Reply false if term < currentTerm (§5.1)
@@ -181,7 +176,6 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 
 	reply.Term = rf.currentTerm
 
-	trace("Server", rf.me, "oldTerm", oldTerm, "differentTerms", differentTerms)
 	if oldTerm || differentTerms {
 		reply.Success = false
 
@@ -192,17 +186,27 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 		return
 	}
 
+	trace("Server", rf.me, "just received append entry with args:", args.String(),
+		"\nLogs:", rf.log,
+		"\nCommit index:", rf.commitIndex,
+	)
+
 	reply.Success = true
 
 	// Append extra entries and remove any conflicting entries
 	for i, j := args.PrevLogIndex+1, 0; j < len(args.Entries); i, j = i+1, j+1 {
 		// Conflicting entries, must delete this entry and all that follow
 		if i < len(rf.log) && rf.log[i].Term != args.Entries[j].Term {
-			// Delete entries starting from index i
+			// Sanity check, should never delete commited logs and thus committed logs are never conflicting
 			if i <= rf.commitIndex {
-				errMsg := fmt.Sprintln("Server", rf.me, "\nArgs:", args, "\nMyLogs:", rf.log, "\nCommitIndex:", rf.commitIndex)
+				errMsg := fmt.Sprintln("Panic error!!! Server", rf.me,
+					"\nArgs:", args,
+					"\nMyLogs:", rf.log,
+					"\nCommitIndex:", rf.commitIndex,
+				)
 				panic(errMsg)
 			}
+			// Delete entries starting from index i
 			rf.log = rf.log[0:i]
 		}
 
@@ -223,13 +227,16 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 	if args.LeaderCommit > rf.commitIndex {
 		rf.commitIndex = min(args.LeaderCommit, len(rf.log)-1)
 	}
+
 	trace("Server", rf.me, "\nLogs:", rf.log, "\nCommit index:", rf.commitIndex)
+
+	state, err := rf.follow(args.Term, -1)
+
+	rf.Persist()
 
 	go rf.applyCommittedCommands()
 
-	state, err := rf.follow(args.Term, -1)
 	if err == nil {
-		trace("Server", rf.me, "is going to send message in channel.\nState: ", state)
 		if state == FOLLOWER {
 			rf.heartbeatCh <- true
 		} else if state == LEADER || state == CANDIDATE {

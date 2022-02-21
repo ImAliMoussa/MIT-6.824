@@ -119,10 +119,8 @@ func (rf *Raft) isUpToDate(args *RequestVoteArgs) bool {
 // return currentTerm and whether this server
 // believes it is the leader.
 func (rf *Raft) GetState() (int, bool) {
-	trace("Server", rf.me, "is trying to acquire lock")
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
-	trace("Server", rf.me, "has acquired the lock")
 
 	return rf.currentTerm, rf.state == LEADER
 }
@@ -157,7 +155,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	isLeader := rf.state == LEADER
 
 	if isLeader {
-		trace("Leader", rf.me, "has received a new command", command)
+		trace("Server", rf.me, "has received a new command", command)
 		entry := LogEntry{
 			Term:    term,
 			Command: command,
@@ -177,13 +175,17 @@ func (rf *Raft) getElectionTimeout() time.Duration {
 // heartsbeats recently.
 func (rf *Raft) ticker() {
 	for !rf.killed() {
-		trace("Server", rf.me, "will try to acquire lock")
-
 		rf.mu.Lock()
 		state := rf.state
+		trace("Server", rf.me, "new tick.\nState", state,
+			"\nCurrentTerm:", rf.currentTerm,
+			"\nLogs:", rf.log,
+			"\nCommit index:", rf.commitIndex,
+			"\nMatch index", rf.matchIndex,
+			"\nVoted for", rf.votedFor,
+		)
 		rf.mu.Unlock()
 
-		trace("Server", rf.me, "has acquired the lock")
 		// assume candidate or leader and change if leader
 		timeout := rf.getElectionTimeout()
 
