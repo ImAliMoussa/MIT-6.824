@@ -160,7 +160,8 @@ func (rf *Raft) sendAppendEntries(server, term int) {
 				rf.stepDownCh <- true
 			}
 		} else {
-			rf.updateNextIndex(server, &reply)
+			rf.updateNextIndex(server, &reply, &args)
+			trace("Server", rf.me, "updated next index for server ", server, "to:", rf.nextIndex[server])
 		}
 	}
 
@@ -175,11 +176,18 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 	oldTerm := args.Term < rf.currentTerm
 	// Reply false if log doesn’t contain an entry at prevLogIndex
 	// whose term matches prevLogTerm (§5.3)
-	differentTerms := (args.PrevLogIndex >= len(rf.log)) || (rf.log[args.PrevLogIndex].Term != args.PrevLogTerm)
+	differentTerms := (args.PrevLogIndex >= len(rf.log)) ||
+		(rf.log[args.PrevLogIndex].Term != args.PrevLogTerm)
 
 	reply.Term = rf.currentTerm
 
 	if oldTerm || differentTerms {
+		trace(
+			"Server", rf.me, "rejected append entry with args:", args.String(),
+			"\nOldterm:", oldTerm,
+			"\nDifferentTerm:", differentTerms,
+			"\nLogs:", rf.log,
+		)
 		reply.Success = false
 
 		conflictIndex, conflictTerm := rf.getConflictingData(args)
@@ -256,9 +264,15 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 //
 // If it does not find an entry with that term, it should set nextIndex = conflictIndex.
 //
-func (rf *Raft) updateNextIndex(server int, reply *AppendEntriesResponse) {
+func (rf *Raft) updateNextIndex(server int, reply *AppendEntriesResponse, args *AppendEntriesRequest) {
 	if reply.Success || reply.ConflictLogIndex < 0 {
 		panic("This shouldn't be happening")
+	}
+
+	if reply.Term == -1 {
+		rf.nextIndex[server] = reply.ConflictLogIndex - 1
+		rf.nextIndex[server] = max(1, rf.nextIndex[server])
+		return
 	}
 
 	for index := len(rf.log) - 1; index >= 0; index-- {
@@ -268,17 +282,25 @@ func (rf *Raft) updateNextIndex(server int, reply *AppendEntriesResponse) {
 		}
 	}
 
-	/*
-		if rf.nextIndex[server] == reply.ConflictLogIndex {
-			panic("Conflict log index can't be the same as next index")
-		}
-	*/
+	if rf.nextIndex[server] == reply.ConflictLogIndex {
+		errMsg := fmt.Sprintln(
+			"Conflict index can't be the same as next index",
+			"\nLogs:", rf.log,
+			"\nLog length:", len(rf.log),
+			"\nArgs:", args.String(),
+			"\nReply:", reply.String(),
+			"\nServer:", server,
+		)
+		trace(errMsg)
+		// panic(errMsg)
+	}
 
 	if rf.nextIndex[server] != reply.ConflictLogIndex {
 		rf.nextIndex[server] = reply.ConflictLogIndex
 	} else {
 		rf.nextIndex[server]--
 	}
+	rf.nextIndex[server] = max(1, rf.nextIndex[server])
 }
 
 //
@@ -293,7 +315,7 @@ func (rf *Raft) updateNextIndex(server int, reply *AppendEntriesResponse) {
 func (rf *Raft) getConflictingData(args *AppendEntriesRequest) (int, int) {
 	logLength := len(rf.log)
 	if args.PrevLogIndex >= logLength {
-		return logLength, -1
+		return logLength - 1, -1
 	}
 
 	conflictLogTerm := rf.log[args.PrevLogIndex].Term

@@ -161,7 +161,6 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 			Command: command,
 		}
 		rf.log = append(rf.log, entry)
-		go rf.broadcastAppendEntries()
 	}
 
 	return index, term, isLeader

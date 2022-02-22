@@ -2,7 +2,7 @@
 
 set -e
 
-for i in {1..20}
+for i in {1..200}
 do
 		tput reset
     echo $i

@@ -29,18 +29,16 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 	// least as up-to-date as receiver‚Äôs log, grant vote (¬ß5.2, ¬ß5.4)
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
-	term := rf.currentTerm
-	votedFor := rf.votedFor
 
-	reply.Term = term
+	reply.Term = rf.currentTerm
 	reply.VoteGranted = false
 
-	if args.Term < term {
+	if args.Term < rf.currentTerm {
 		reply.VoteGranted = false
 		return
 	}
 
-	if args.Term > term {
+	if args.Term > rf.currentTerm {
 		state := rf.follow(args.Term)
 		rf.votedFor = -1
 		if state == FOLLOWER {
@@ -48,10 +46,14 @@ func (rf *Raft) RequestVote(args *RequestVoteArgs, reply *RequestVoteReply) {
 		}
 	}
 
-	if (votedFor == -1 || votedFor == rf.me) && rf.isUpToDate(args) {
+	isUpToDate := rf.isUpToDate(args)
+	trace("Server", rf.me, "votedFor:", rf.votedFor, "is up to date:", isUpToDate)
+
+	if (rf.votedFor == -1 || rf.votedFor == rf.me) && rf.isUpToDate(args) {
 		reply.VoteGranted = true
 		// reset follower timer when follower grants a vote
 		rf.follow(args.Term)
+		rf.votedFor = args.CandidateId
 	}
 
 	rf.Persist()

@@ -25,6 +25,10 @@ func (rf *Raft) startElection() {
 
 	trace("Server", rf.me, "has started an election")
 
+	if rf.state != CANDIDATE {
+		return
+	}
+
 	args := rf.getElectionArgs()
 	currentTerm := args.Term
 
@@ -36,9 +40,13 @@ func (rf *Raft) startElection() {
 		}
 		go func(server int) {
 			reply := &RequestVoteReply{}
-			rf.sendRequestVote(server, args, reply)
+			ok := rf.sendRequestVote(server, args, reply)
 
-			trace("Server", rf.me, "has received a response from server", server,
+			if !ok {
+				return
+			}
+
+			trace("Server", rf.me, "has received a vote response from server", server,
 				"\nArgs:", args,
 				"\nResponse:", reply,
 			)
