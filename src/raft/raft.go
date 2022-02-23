@@ -181,6 +181,7 @@ func (rf *Raft) ticker() {
 			"\nLogs:", rf.log,
 			"\nCommit index:", rf.commitIndex,
 			"\nMatch index", rf.matchIndex,
+			"\nNext index", rf.nextIndex,
 			"\nVoted for", rf.votedFor,
 		)
 		rf.mu.Unlock()

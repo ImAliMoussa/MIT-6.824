@@ -16,10 +16,16 @@ type AppendEntriesRequest struct {
 }
 
 type AppendEntriesResponse struct {
-	Term             int
-	Success          bool
-	ConflictLogIndex int
-	ConflictLogTerm  int
+	Term    int
+	Success bool
+
+	//
+	// Reference: https://pdos.csail.mit.edu/6.824/notes/l-raft2.txt
+	//
+
+	XTerm  int // term in the conflicting entry (if any)
+	XIndex int // index of first entry with that term (if any)
+	XLen   int // log length
 }
 
 func (rf *Raft) updateIndexes(server, previousLogIndex, lengthEntries int) {
@@ -172,27 +178,32 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 
+	reply.Term = rf.currentTerm
+	reply.Success = false
 	// Reply false if term < currentTerm (§5.1)
-	oldTerm := args.Term < rf.currentTerm
+	if args.Term < rf.currentTerm {
+		return
+	}
+
+	if rf.state == FOLLOWER {
+		rf.heartbeatCh <- true
+	}
 	// Reply false if log doesn’t contain an entry at prevLogIndex
 	// whose term matches prevLogTerm (§5.3)
 	differentTerms := (args.PrevLogIndex >= len(rf.log)) ||
 		(rf.log[args.PrevLogIndex].Term != args.PrevLogTerm)
 
-	reply.Term = rf.currentTerm
-
-	if oldTerm || differentTerms {
+	if differentTerms {
 		trace(
 			"Server", rf.me, "rejected append entry with args:", args.String(),
-			"\nOldterm:", oldTerm,
 			"\nDifferentTerm:", differentTerms,
 			"\nLogs:", rf.log,
 		)
-		reply.Success = false
 
-		conflictIndex, conflictTerm := rf.getConflictingData(args)
-		reply.ConflictLogIndex = conflictIndex
-		reply.ConflictLogTerm = conflictTerm
+		xTerm, xIndex, xLen := rf.getConflictingData(args)
+		reply.XTerm = xTerm
+		reply.XIndex = xIndex
+		reply.XLen = xLen
 
 		return
 	}
@@ -250,83 +261,95 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 
 	go rf.applyCommittedCommands()
 
-	if state == FOLLOWER {
-		rf.heartbeatCh <- true
-	} else if state == LEADER || state == CANDIDATE {
+	if state == LEADER || state == CANDIDATE {
 		rf.stepDownCh <- true
-	} else {
-		panic("wrong state")
 	}
 }
 
-// Upon receiving a conflict response, the leader should first search its log for conflictTerm. If it finds an entry in its log with
-// that term, it should set nextIndex to be the one beyond the index of the last entry in that term in its log.
 //
-// If it does not find an entry with that term, it should set nextIndex = conflictIndex.
+// how to roll back quickly
+//   the Figure 2 design backs up one entry per RPC -- slow!
+//   lab tester may require faster roll-back
+//   paper outlines a scheme towards end of Section 5.3
+//     no details; here's my guess; better schemes are possible
+//       Case 1      Case 2       Case 3
+//   S1: 4 5 5       4 4 4        4
+//   S2: 4 6 6 6 or  4 6 6 6  or  4 6 6 6
+//   S2 is leader for term 6, S1 comes back to life, S2 sends AE for last 6
+//     AE has prevLogTerm=6
+//   rejection from S1 includes:
+//     XTerm:  term in the conflicting entry (if any)
+//     XIndex: index of first entry with that term (if any)
+//     XLen:   log length
+//   Case 1 (leader doesn't have XTerm):
+//     nextIndex = XIndex
+//   Case 2 (leader has XTerm):
+//     nextIndex = leader's last entry for XTerm
+//   Case 3 (follower's log is too short):
+//     nextIndex = XLen
 //
 func (rf *Raft) updateNextIndex(server int, reply *AppendEntriesResponse, args *AppendEntriesRequest) {
-	if reply.Success || reply.ConflictLogIndex < 0 {
-		panic("This shouldn't be happening")
-	}
+	// for logging
+	oldNextIndex := rf.nextIndex[server]
 
-	if reply.Term == -1 {
-		rf.nextIndex[server] = reply.ConflictLogIndex - 1
-		rf.nextIndex[server] = max(1, rf.nextIndex[server])
-		return
-	}
+	nextIndex := -1
 
-	for index := len(rf.log) - 1; index >= 0; index-- {
-		if rf.log[index].Term == reply.ConflictLogTerm {
-			rf.nextIndex[server] = index + 1
-			return
+	if reply.XTerm == -1 {
+		// Case 3, follower's log is too short
+		nextIndex = reply.XLen
+	} else {
+
+		lastXtermIndexInLeader := -1
+		for i := 0; i < len(rf.log); i++ {
+			if rf.log[i].Term == reply.XTerm {
+				lastXtermIndexInLeader = i
+			}
+		}
+
+		if lastXtermIndexInLeader == -1 {
+			// Case 1, leader doesn't have xterm
+			nextIndex = reply.XIndex
+		} else {
+			// Case 2, leader has xterm
+			nextIndex = lastXtermIndexInLeader
 		}
 	}
 
-	if rf.nextIndex[server] == reply.ConflictLogIndex {
-		errMsg := fmt.Sprintln(
-			"Conflict index can't be the same as next index",
-			"\nLogs:", rf.log,
-			"\nLog length:", len(rf.log),
-			"\nArgs:", args.String(),
-			"\nReply:", reply.String(),
-			"\nServer:", server,
-		)
-		trace(errMsg)
-		// panic(errMsg)
-	}
+	nextIndex = min(nextIndex, len(rf.log))
 
-	if rf.nextIndex[server] != reply.ConflictLogIndex {
-		rf.nextIndex[server] = reply.ConflictLogIndex
-	} else {
-		rf.nextIndex[server]--
-	}
-	rf.nextIndex[server] = max(1, rf.nextIndex[server])
+	trace(
+		"Server", rf.me,
+		"updating next index for server", server,
+		"\nArgs:", args,
+		"\nReply:", reply,
+		"\nOld next index:", oldNextIndex,
+		"\nNew next index:", nextIndex,
+	)
+
+	rf.nextIndex[server] = nextIndex
 }
 
 //
-// If a follower does not have prevLogIndex in its log, it should return with conflictIndex = len(log) and conflictTerm = None.
+// returns XTerm, XIndex, XLen
 //
-// If a follower does have prevLogIndex in its log, but the term does not match, it should return
-// conflictTerm = log[prevLogIndex].Term, and then search its log for the first index whose entry has
-// term equal to conflictTerm.
-//
-// returns ConflictLogIndex, ConflictLogTerm
-//
-func (rf *Raft) getConflictingData(args *AppendEntriesRequest) (int, int) {
+func (rf *Raft) getConflictingData(args *AppendEntriesRequest) (int, int, int) {
 	logLength := len(rf.log)
 	if args.PrevLogIndex >= logLength {
-		return logLength - 1, -1
+		return -1, -1, logLength
 	}
 
-	conflictLogTerm := rf.log[args.PrevLogIndex].Term
-	conflictLogIndex := -1
-
-	for idx := 0; idx < logLength; idx++ {
-		if rf.log[idx].Term == conflictLogTerm {
-			conflictLogIndex = idx
+	xTerm := rf.log[args.PrevLogIndex].Term
+	xIndex := -1
+	for i := 0; i < logLength; i++ {
+		if rf.log[i].Term == xTerm {
+			xIndex = i
 			break
 		}
 	}
 
-	return conflictLogIndex, conflictLogTerm
+	if xIndex == -1 {
+		panic("Wrong XIndex value in getConflictingData")
+	}
+
+	return xTerm, xIndex, logLength
 }
