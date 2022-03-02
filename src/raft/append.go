@@ -47,16 +47,10 @@ func (rf *Raft) updateCommitIndex() {
 	// the nth index of the array has n values larger than it and thus is least value in the
 	// majority
 	// leetcode type problem lol
-	arr := make([]int, rf.numPeers-1)
-	for i, j := 0, 0; i < rf.numPeers; i++ {
-		if i == rf.me {
-			continue
-		}
-		arr[j] = rf.matchIndex[i]
-		j++
-	}
+	arr := make([]int, rf.numPeers)
+	copy(arr, rf.matchIndex)
 	sort.Ints(arr)
-	newCommitIndex := arr[rf.numPeers/2]
+	newCommitIndex := arr[rf.numPeers/2+1]
 
 	// A leader is not allowed to update commitIndex to somewhere in a previous term
 	// (or, for that matter, a future term). Thus, as
@@ -64,7 +58,7 @@ func (rf *Raft) updateCommitIndex() {
 	// be sure an entry is actually committed (and will not ever be changed
 	// in the future) if it’s not from their current term.
 	// This is illustrated by Figure 8
-	if newCommitIndex > rf.commitIndex && rf.log[newCommitIndex].Term == rf.currentTerm {
+	if newCommitIndex > rf.commitIndex && rf.getLog(newCommitIndex).Term == rf.currentTerm {
 		rf.commitIndex = newCommitIndex
 		trace("Server", rf.me, "updated commit index to", rf.commitIndex)
 		go rf.applyCommittedCommands()
@@ -75,12 +69,14 @@ func (rf *Raft) applyCommittedCommands() {
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 	rf.Persist()
+
 	trace("Server", rf.me, "commit index:", rf.commitIndex)
+
 	for rf.lastApplied < rf.commitIndex {
 		rf.lastApplied++
 		applyMsg := ApplyMsg{
 			CommandValid: true,
-			Command:      rf.log[rf.lastApplied].Command,
+			Command:      rf.getLog(rf.lastApplied).Command,
 			CommandIndex: rf.lastApplied,
 		}
 		trace("Server", rf.me, "applied index", rf.lastApplied, "command:", applyMsg.Command)
@@ -129,10 +125,10 @@ func (rf *Raft) sendAppendEntries(server, term int) {
 
 	nextLogIndex := rf.nextIndex[server]
 	previousLogIndex := nextLogIndex - 1
-	previousLogTerm := rf.log[previousLogIndex].Term
+	previousLogTerm := rf.getLog(previousLogIndex).Term
 
 	// clone entries to avoid race conditions
-	entriesSlice := rf.log[nextLogIndex:len(rf.log)]
+	entriesSlice := rf.sliceLog(nextLogIndex, rf.logLength())
 	entriesClone := make([]LogEntry, len(entriesSlice))
 	copy(entriesClone, entriesSlice)
 
@@ -195,8 +191,8 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 	}
 	// Reply false if log doesn’t contain an entry at prevLogIndex
 	// whose term matches prevLogTerm (§5.3)
-	differentTerms := (args.PrevLogIndex >= len(rf.log)) ||
-		(rf.log[args.PrevLogIndex].Term != args.PrevLogTerm)
+	differentTerms := (args.PrevLogIndex >= rf.logLength()) ||
+		(rf.getLog(args.PrevLogIndex).Term != args.PrevLogTerm)
 
 	if differentTerms {
 		trace(
@@ -223,7 +219,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 	// Append extra entries and remove any conflicting entries
 	for i, j := args.PrevLogIndex+1, 0; j < len(args.Entries); i, j = i+1, j+1 {
 		// Conflicting entries, must delete this entry and all that follow
-		if i < len(rf.log) && rf.log[i].Term != args.Entries[j].Term {
+		if i < rf.logLength() && rf.getLog(i).Term != args.Entries[j].Term {
 			// Sanity check, should never delete commited logs and thus committed logs are never conflicting
 			if i <= rf.commitIndex {
 				errMsg := fmt.Sprintln("Panic error!!! Server", rf.me,
@@ -234,17 +230,17 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 				panic(errMsg)
 			}
 			// Delete entries starting from index i
-			rf.log = rf.log[0:i]
+			rf.log = rf.sliceLog(rf.baseIndex, i)
 		}
 
-		if i >= len(rf.log) {
+		if i >= rf.logLength() {
 			// Append all remaining entries and break
 			rf.log = append(rf.log, args.Entries[j:]...)
 			break
 		} else {
 			// Sanity check
-			if !reflect.DeepEqual(rf.log[i], args.Entries[j]) {
-				errMsg := fmt.Sprintln("Why are they not equal", rf.log[i], args.Entries[j])
+			if !reflect.DeepEqual(rf.getLog(i), args.Entries[j]) {
+				errMsg := fmt.Sprintln("Why are they not equal", rf.getLog(i), args.Entries[j])
 				panic(errMsg)
 			}
 		}
@@ -252,7 +248,7 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 
 	// If leaderCommit > commitIndex, set commitIndex = min(leaderCommit, index of last new entry)
 	if args.LeaderCommit > rf.commitIndex {
-		rf.commitIndex = min(args.LeaderCommit, len(rf.log)-1)
+		rf.commitIndex = min(args.LeaderCommit, rf.logLength()-1)
 	}
 
 	trace("Server", rf.me, "\nLogs:", rf.log, "\nCommit index:", rf.commitIndex)
@@ -305,8 +301,8 @@ func (rf *Raft) updateNextIndex(server int, reply *AppendEntriesResponse, args *
 	} else {
 
 		lastXtermIndexInLeader := -1
-		for i := 0; i < len(rf.log); i++ {
-			if rf.log[i].Term == reply.XTerm {
+		for i := rf.baseIndex; i < rf.logLength(); i++ {
+			if rf.getLog(i).Term == reply.XTerm {
 				lastXtermIndexInLeader = i
 			}
 		}
@@ -320,7 +316,7 @@ func (rf *Raft) updateNextIndex(server int, reply *AppendEntriesResponse, args *
 		}
 	}
 
-	nextIndex = min(nextIndex, len(rf.log))
+	nextIndex = min(nextIndex, rf.logLength())
 
 	trace(
 		"Server", rf.me,
@@ -338,15 +334,15 @@ func (rf *Raft) updateNextIndex(server int, reply *AppendEntriesResponse, args *
 // returns XTerm, XIndex, XLen
 //
 func (rf *Raft) getConflictingData(args *AppendEntriesRequest) (int, int, int) {
-	logLength := len(rf.log)
+	logLength := rf.logLength()
 	if args.PrevLogIndex >= logLength {
 		return -1, -1, logLength
 	}
 
-	xTerm := rf.log[args.PrevLogIndex].Term
+	xTerm := rf.getLog(args.PrevLogIndex).Term
 	xIndex := -1
-	for i := 0; i < logLength; i++ {
-		if rf.log[i].Term == xTerm {
+	for i := rf.baseIndex; i < logLength; i++ {
+		if rf.getLog(i).Term == xTerm {
 			xIndex = i
 			break
 		}
