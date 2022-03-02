@@ -28,9 +28,7 @@ type AppendEntriesResponse struct {
 	XLen   int // log length
 }
 
-func (rf *Raft) updateIndexes(server, previousLogIndex, lengthEntries int) {
-	newMatchIndex := previousLogIndex + lengthEntries
-
+func (rf *Raft) updateIndexes(server, newMatchIndex int) {
 	// sanity check
 	if newMatchIndex > rf.matchIndex[server] {
 		rf.matchIndex[server] = newMatchIndex
@@ -76,15 +74,17 @@ func (rf *Raft) updateCommitIndex() {
 func (rf *Raft) applyCommittedCommands() {
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
+	rf.Persist()
 	trace("Server", rf.me, "commit index:", rf.commitIndex)
-	for i := rf.lastApplied; i <= rf.commitIndex; i++ {
+	for rf.lastApplied < rf.commitIndex {
+		rf.lastApplied++
 		applyMsg := ApplyMsg{
 			CommandValid: true,
-			Command:      rf.log[i].Command,
-			CommandIndex: i,
+			Command:      rf.log[rf.lastApplied].Command,
+			CommandIndex: rf.lastApplied,
 		}
+		trace("Server", rf.me, "applied index", rf.lastApplied, "command:", applyMsg.Command)
 		rf.applyCh <- applyMsg
-		trace("Server", rf.me, "applied index", i, "command:", applyMsg.Command)
 	}
 	rf.lastApplied = rf.commitIndex
 }
@@ -156,7 +156,8 @@ func (rf *Raft) sendAppendEntries(server, term int) {
 
 	if reply.Success {
 		// All is good
-		rf.updateIndexes(server, previousLogIndex, len(args.Entries))
+		newMatchIndex := previousLogIndex + len(args.Entries)
+		rf.updateIndexes(server, newMatchIndex)
 	} else if ok {
 		// Successful RPC request & response but operation failed
 		if reply.Term > term {
