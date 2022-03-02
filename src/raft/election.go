@@ -7,13 +7,13 @@ func (rf *Raft) getElectionArgs() *RequestVoteArgs {
 
 	rf.Persist()
 
-	lengthOfLog := len(rf.log)
+	lengthOfLog := rf.logLength()
 
 	args := &RequestVoteArgs{
 		Term:         rf.currentTerm,
 		CandidateId:  rf.me,
 		LastLogIndex: lengthOfLog - 1,
-		LastLogTerm:  rf.log[lengthOfLog-1].Term,
+		LastLogTerm:  rf.getLog(lengthOfLog - 1).Term,
 	}
 
 	return args

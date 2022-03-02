@@ -73,7 +73,9 @@ type ApplyMsg struct {
 // A Go object implementing a single Raft peer.
 //
 type Raft struct {
-	mu sync.Mutex // Lock to protect shared access to this peer's state
+	mu      sync.Mutex // Lock to protect shared access to this peer's state
+	applyMu sync.Mutex // Lock to protect apply channel
+
 	// mu        deadlock.Mutex
 	peers     []*labrpc.ClientEnd // RPC end points of all peers
 	persister *Persister          // Object to hold this peer's persisted state
@@ -110,12 +112,13 @@ type Raft struct {
 // end with the same term, then whichever log is longer is
 // more up-to-date.
 func (rf *Raft) isUpToDate(args *RequestVoteArgs) bool {
-	lastTerm := rf.log[len(rf.log)-1].Term
-	lengthOfLog := len(rf.log)
+	lastTerm := rf.getLog(rf.logLength() - 1).Term
+	lengthOfLog := rf.logLength()
 	if lastTerm != args.LastLogTerm {
 		return lastTerm < args.LastLogTerm
 	}
 	return lengthOfLog <= (1 + args.LastLogIndex)
+
 }
 
 // return currentTerm and whether this server
@@ -129,7 +132,7 @@ func (rf *Raft) GetState() (int, bool) {
 
 func (rf *Raft) initializeVolatileState() {
 	for i := 0; i < rf.numPeers; i++ {
-		rf.nextIndex[i] = len(rf.log)
+		rf.nextIndex[i] = rf.logLength()
 		rf.matchIndex[i] = 0
 	}
 }
@@ -152,7 +155,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 
-	index := len(rf.log)
+	index := rf.logLength()
 	term := rf.currentTerm
 	isLeader := rf.state == LEADER
 

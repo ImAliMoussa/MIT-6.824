@@ -67,11 +67,12 @@ func (rf *Raft) updateCommitIndex() {
 
 func (rf *Raft) applyCommittedCommands() {
 	rf.mu.Lock()
-	defer rf.mu.Unlock()
+	rf.applyMu.Lock()
+	defer rf.applyMu.Unlock()
 	rf.Persist()
 
 	trace("Server", rf.me, "commit index:", rf.commitIndex)
-
+	commands := make([]ApplyMsg, 0)
 	for rf.lastApplied < rf.commitIndex {
 		rf.lastApplied++
 		applyMsg := ApplyMsg{
@@ -79,10 +80,15 @@ func (rf *Raft) applyCommittedCommands() {
 			Command:      rf.getLog(rf.lastApplied).Command,
 			CommandIndex: rf.lastApplied,
 		}
-		trace("Server", rf.me, "applied index", rf.lastApplied, "command:", applyMsg.Command)
-		rf.applyCh <- applyMsg
+		commands = append(commands, applyMsg)
 	}
 	rf.lastApplied = rf.commitIndex
+	rf.mu.Unlock()
+
+	for _, applyMsg := range commands {
+		trace("Server", rf.me, "applied index", applyMsg.CommandIndex, "command:", applyMsg.Command)
+		rf.applyCh <- applyMsg
+	}
 }
 
 func (rf *Raft) broadcastAppendEntries() {

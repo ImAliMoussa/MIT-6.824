@@ -2,6 +2,7 @@ package raft
 
 import (
 	"bytes"
+	"fmt"
 
 	"6.824/labgob"
 )
@@ -60,6 +61,7 @@ func (rf *Raft) ReadPersist(data []byte) {
 		rf.votedFor = votedFor
 		rf.log = log
 		rf.baseIndex = baseIndex
+		rf.lastApplied = baseIndex
 	}
 }
 
@@ -68,8 +70,34 @@ func (rf *Raft) ReadPersist(data []byte) {
 // have more recent info since it communicate the snapshot on applyCh.
 //
 func (rf *Raft) CondInstallSnapshot(lastIncludedTerm int, lastIncludedIndex int, snapshot []byte) bool {
+	rf.mu.Lock()
+	defer rf.mu.Unlock()
 
-	// Your code here (2D).
+	if lastIncludedIndex <= rf.baseIndex || rf.lastApplied > lastIncludedIndex {
+		return false
+	}
+
+	if lastIncludedIndex < rf.logLength() && rf.getLog(lastIncludedIndex).Term == lastIncludedTerm {
+		// TODO figure out if I need to delete what's after lastIncludedIndex in case that
+		// rf.getLog(lastIncludedIndex).term != lastIncludedTerm
+		rf.log = rf.sliceLog(lastIncludedIndex, rf.logLength())
+	} else {
+		rf.log = make([]LogEntry, 1)
+	}
+	rf.log[0].Term = lastIncludedTerm
+	rf.baseIndex = lastIncludedIndex
+	rf.lastApplied = rf.baseIndex
+
+	raftState := rf.getRaftState()
+	rf.persister.SaveStateAndSnapshot(raftState, snapshot)
+
+	trace(
+		"Server", rf.me,
+		"\nBase index:", rf.baseIndex,
+		"\nLogs:", rf.log,
+		"\nLog length:", rf.logLength(),
+		"\nLast applied", rf.lastApplied,
+	)
 
 	return true
 }
@@ -80,7 +108,24 @@ func (rf *Raft) CondInstallSnapshot(lastIncludedTerm int, lastIncludedIndex int,
 // service no longer needs the log through (and including)
 // that index. Raft should now trim its log as much as possible.
 //
-func (rf *Raft) Snapshot(index int, snapshot []byte) {
+func (rf *Raft) Snapshot(baseIndex int, snapshot []byte) {
 	// Your code here (2D).
+	trace("Server", rf.me, "is trying to acquire the lock in Snapshot")
+	rf.mu.Lock()
+	trace("Server", rf.me, "has acquired the lock in Snapshot")
+	defer rf.mu.Unlock()
 
+	if baseIndex <= rf.baseIndex || baseIndex >= rf.logLength() {
+		errMsg := fmt.Sprintln("Out of range index:", baseIndex, "base index is:", rf.baseIndex)
+		panic(errMsg)
+	}
+
+	rf.log = rf.sliceLog(baseIndex, rf.logLength())
+	rf.baseIndex = baseIndex
+	rf.lastApplied = baseIndex
+
+	raftState := rf.getRaftState()
+	rf.persister.SaveStateAndSnapshot(raftState, snapshot)
+
+	trace("Server", rf.me, "is releasing the lock")
 }

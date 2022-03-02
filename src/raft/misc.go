@@ -38,3 +38,18 @@ func (r *RequestVoteReply) String() string {
 	out, _ := json.Marshal(r)
 	return string(out)
 }
+
+func (i InstallSnapshotReq) String() string {
+	out, _ := json.Marshal(i)
+	return string(out)
+}
+
+func (i InstallSnapshotRes) String() string {
+	out, _ := json.Marshal(i)
+	return string(out)
+}
+
+func (a ApplyMsg) String() string {
+	out, _ := json.Marshal(a)
+	return string(out)
+}
