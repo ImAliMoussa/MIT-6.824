@@ -23,6 +23,7 @@ import (
 	"math/rand"
 	"sync"
 	"time"
+
 	//	"6.824/labgob"
 	"6.824/labrpc"
 )
@@ -97,8 +98,9 @@ type Raft struct {
 	heartbeatCh  chan bool
 	killCh       chan bool
 
-	state    RaftState
-	numPeers int
+	state     RaftState
+	numPeers  int
+	baseIndex int
 }
 
 // Raft determines which of two logs is more up-to-date
@@ -155,7 +157,7 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 	isLeader := rf.state == LEADER
 
 	if isLeader {
-		trace("Server", rf.me, "has received a new command", command)
+		trace("Server", rf.me, "has received a new command", command, "with index", index)
 		entry := LogEntry{
 			Term:    term,
 			Command: command,
@@ -256,8 +258,9 @@ func Make(peers []*labrpc.ClientEnd, me int,
 		wonElectonCh: make(chan bool, 100),
 		killCh:       make(chan bool, 100),
 
-		state:    FOLLOWER,
-		numPeers: numPeers,
+		state:     FOLLOWER,
+		numPeers:  numPeers,
+		baseIndex: 0,
 	}
 
 	// initialize from state persisted before a crash

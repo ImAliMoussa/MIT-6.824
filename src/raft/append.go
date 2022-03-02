@@ -99,7 +99,11 @@ func (rf *Raft) broadcastAppendEntries() {
 
 	for server := 0; server < rf.numPeers; server++ {
 		if server != rf.me {
-			go rf.sendAppendEntries(server, rf.currentTerm)
+			if rf.nextIndex[server] <= rf.baseIndex {
+				go rf.sendInstallSnapshot(server)
+			} else {
+				go rf.sendAppendEntries(server, rf.currentTerm)
+			}
 		}
 	}
 }

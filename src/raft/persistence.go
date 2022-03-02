@@ -1,9 +1,24 @@
 package raft
 
 import (
-	"6.824/labgob"
 	"bytes"
+
+	"6.824/labgob"
 )
+
+func (rf *Raft) getRaftState() []byte {
+	buffer := new(bytes.Buffer)
+
+	e := labgob.NewEncoder(buffer)
+
+	e.Encode(rf.currentTerm)
+	e.Encode(rf.votedFor)
+	e.Encode(rf.baseIndex)
+	e.Encode(rf.log)
+
+	data := buffer.Bytes()
+	return data
+}
 
 //
 // save Raft's persistent state to stable storage,
@@ -11,15 +26,7 @@ import (
 // see paper's Figure 2 for a description of what should be persistent.
 //
 func (rf *Raft) Persist() {
-	buffer := new(bytes.Buffer)
-
-	e := labgob.NewEncoder(buffer)
-
-	e.Encode(rf.currentTerm)
-	e.Encode(rf.votedFor)
-	e.Encode(rf.log)
-
-	data := buffer.Bytes()
+	data := rf.getRaftState()
 	rf.persister.SaveRaftState(data)
 }
 
@@ -38,10 +45,13 @@ func (rf *Raft) ReadPersist(data []byte) {
 	d := labgob.NewDecoder(r)
 	var currentTerm int
 	var votedFor int
+	var baseIndex int
+
 	var log []LogEntry
 
 	if d.Decode(&currentTerm) != nil ||
 		d.Decode(&votedFor) != nil ||
+		d.Decode(&baseIndex) != nil ||
 		d.Decode(&log) != nil {
 		panic("Decode error in readPersist")
 	} else {
@@ -49,6 +59,7 @@ func (rf *Raft) ReadPersist(data []byte) {
 		rf.currentTerm = currentTerm
 		rf.votedFor = votedFor
 		rf.log = log
+		rf.baseIndex = baseIndex
 	}
 }
 
