@@ -1,33 +1,67 @@
 package kvraft
 
+import (
+	"encoding/json"
+	"fmt"
+	"log"
+	"os"
+	"runtime"
+	"time"
+)
+
 const (
 	OK             = "OK"
 	ErrNoKey       = "ErrNoKey"
 	ErrWrongLeader = "ErrWrongLeader"
+	PUT            = "PUT"
+	APPEND         = "APPEND"
+	GET            = "GET"
+	ClerkTimeout   = 10 * time.Millisecond
 )
 
 type Err string
 
-// Put or Append
-type PutAppendArgs struct {
-	Key   string
-	Value string
-	Op    string // "Put" or "Append"
-	// You'll have to add definitions here.
-	// Field names must start with capital letters,
-	// otherwise RPC will break.
+func (ck *Clerk) Trace(a ...interface{}) {
+	// Debugging
+	const Debug = 1
+
+	if Debug == 1 && os.Getenv("LOG") == "1" {
+		s := fmt.Sprintln(a...)
+
+		pc := make([]uintptr, 10)
+		runtime.Callers(2, pc)
+		f := runtime.FuncForPC(pc[0])
+		_, line := f.FileLine(pc[0])
+
+		log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime | log.Lshortfile))
+		// yellow := "\033[33m"
+		// reset := "\033[0m"
+		// log.Printf("%s%s@%d%s\n%s\n", yellow, f.Name(), line, reset, s)
+		log.Printf("%s@%d\nClerk: %s\n", f.Name(), line, s)
+	}
 }
 
-type PutAppendReply struct {
-	Err Err
+func (kv *KVServer) Trace(a ...interface{}) {
+	// Debugging
+	const Debug = 1
+
+	if Debug == 1 && os.Getenv("LOG") == "1" {
+		s := fmt.Sprintln(a...)
+
+		pc := make([]uintptr, 10)
+		runtime.Callers(2, pc)
+		f := runtime.FuncForPC(pc[0])
+		_, line := f.FileLine(pc[0])
+
+		log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime | log.Lshortfile))
+		// yellow := "\033[33m"
+		// reset := "\033[0m"
+		// log.Printf("%s%s@%d%s\n%s\n", yellow, f.Name(), line, reset, s)
+		log.Printf("%s@%d\nKv(%d): %s\n", f.Name(), line, kv.me, s)
+	}
 }
 
-type GetArgs struct {
-	Key string
-	// You'll have to add definitions here.
-}
-
-type GetReply struct {
-	Err   Err
-	Value string
+func PP(i interface{}) string {
+	out, _ := json.Marshal(i)
+	return string(out)
 }

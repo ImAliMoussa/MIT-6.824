@@ -18,32 +18,29 @@ func DPrintf(format string, a ...interface{}) (n int, err error) {
 	return
 }
 
-
 type Op struct {
 	// Your definitions here.
 	// Field names must start with capital letters,
 	// otherwise RPC will break.
+	Type  string
+	Id    int64
+	Key   string
+	Value string
 }
 
 type KVServer struct {
-	mu      sync.Mutex
+	// mu      sync.Mutex
 	me      int
 	rf      *raft.Raft
 	applyCh chan raft.ApplyMsg
 	dead    int32 // set by Kill()
 
 	maxraftstate int // snapshot if log grows this big
-
 	// Your definitions here.
-}
-
-
-func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
-	// Your code here.
-}
-
-func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
-	// Your code here.
+	keyValueDict map[string]string
+	completedOps map[int64]string
+	channelMap   map[int64]chan interface{}
+	mu           sync.Mutex
 }
 
 //
@@ -85,17 +82,25 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	// call labgob.Register on structures you want
 	// Go's RPC library to marshall/unmarshall.
 	labgob.Register(Op{})
+	labgob.Register(GetArgs{})
+	labgob.Register(GetReply{})
+	labgob.Register(PutAppendArgs{})
+	labgob.Register(PutAppendReply{})
 
-	kv := new(KVServer)
-	kv.me = me
-	kv.maxraftstate = maxraftstate
+	N := 2000
+	applyCh := make(chan raft.ApplyMsg, N)
 
-	// You may need initialization code here.
+	kv := &KVServer{
+		me:           me,
+		maxraftstate: maxraftstate,
+		applyCh:      applyCh,
+		rf:           raft.Make(servers, me, persister, applyCh),
+		keyValueDict: make(map[string]string),
+		completedOps: make(map[int64]string),
+		channelMap:   make(map[int64]chan interface{}),
+	}
 
-	kv.applyCh = make(chan raft.ApplyMsg)
-	kv.rf = raft.Make(servers, me, persister, kv.applyCh)
-
-	// You may need initialization code here.
+	go kv.listener()
 
 	return kv
 }
