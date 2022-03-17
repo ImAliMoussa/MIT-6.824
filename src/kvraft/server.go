@@ -1,12 +1,13 @@
 package kvraft
 
 import (
-	"6.824/labgob"
-	"6.824/labrpc"
-	"6.824/raft"
 	"log"
 	"sync"
 	"sync/atomic"
+
+	"6.824/labgob"
+	"6.824/labrpc"
+	"6.824/raft"
 )
 
 const Debug = false
@@ -87,7 +88,7 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	labgob.Register(PutAppendArgs{})
 	labgob.Register(PutAppendReply{})
 
-	N := 2000
+	N := 100
 	applyCh := make(chan raft.ApplyMsg, N)
 
 	kv := &KVServer{

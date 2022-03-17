@@ -1,6 +1,6 @@
 package kvraft
 
-import "time"
+// import "time"
 
 // Put or Append
 type PutAppendArgs struct {
@@ -34,28 +34,26 @@ func (ck *Clerk) PutAppend(key string, value string, op string) {
 		Op:    op,
 		Id:    nrand(),
 	}
+	ck.Trace("started new operation\nArgs:", PP(args))
 	server := ck.lastServer
 	for {
 		reply := PutAppendReply{}
-		select {
-		case <-ck.PutAppendRPC(server, &args, &reply):
-			if reply.Err == OK {
-				ck.lastServer = server
-				return
-			}
-		case <-time.After(ClerkTimeout):
+
+		ck.Trace("sending put append request to server", server, "\nArgs:", PP(args))
+		ck.servers[server].Call("KVServer.PutAppend", &args, &reply)
+		ck.Trace(
+			"received put append request to server", server,
+			"\nArgs:", PP(args),
+			"\nReply:", PP(reply),
+		)
+
+		if reply.Err == OK {
+			ck.Trace("received new operation\nArgs:", PP(args), "\nReply:", PP(reply))
+			ck.lastServer = server
+			return
 		}
 		server = (server + 1) % len(ck.servers)
 	}
-}
-
-func (ck *Clerk) PutAppendRPC(server int, args *PutAppendArgs, reply *PutAppendReply) chan bool {
-	ch := make(chan bool, 1)
-	go func() {
-		ck.servers[server].Call("KVServer.PutAppend", args, reply)
-		ch <- true
-	}()
-	return ch
 }
 
 func (ck *Clerk) Put(key string, value string) {

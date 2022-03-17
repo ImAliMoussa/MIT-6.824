@@ -1,10 +1,15 @@
 package kvraft
 
-import "time"
+import (
+	"time"
+)
 
 func (kv *KVServer) IsDone(id int64) (string, bool) {
+	kv.Trace("Requesting lock")
 	kv.mu.Lock()
+	kv.Trace("Received lock")
 	defer kv.mu.Unlock()
+
 	value, exists := kv.completedOps[id]
 	return value, exists
 }
@@ -15,6 +20,7 @@ func (kv *KVServer) WaitAndGet(op Op) (string, bool) {
 	kv.mu.Lock()
 	if _, exists := kv.channelMap[id]; !exists {
 		kv.channelMap[id] = make(chan interface{}, 10)
+		kv.Trace("Started op", op)
 		go kv.rf.Start(op)
 	}
 
@@ -25,15 +31,22 @@ func (kv *KVServer) WaitAndGet(op Op) (string, bool) {
 	case <-channel:
 	case <-time.After(ClerkTimeout):
 	}
+
+	kv.Trace("Requesting lock")
 	kv.mu.Lock()
+	kv.Trace("Received lock")
 	defer kv.mu.Unlock()
+
 	value, exists := kv.completedOps[id]
 	return value, exists
 }
 
 func (kv *KVServer) MarkAsComplete(operation Op) {
+	kv.Trace("Requesting lock")
 	kv.mu.Lock()
+	kv.Trace("Received lock")
 	defer kv.mu.Unlock()
+
 	if _, alreadyFinished := kv.completedOps[operation.Id]; alreadyFinished {
 		return
 	}

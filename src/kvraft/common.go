@@ -16,7 +16,7 @@ const (
 	PUT            = "PUT"
 	APPEND         = "APPEND"
 	GET            = "GET"
-	ClerkTimeout   = 10 * time.Millisecond
+	ClerkTimeout   = 250 * time.Millisecond
 )
 
 type Err string
@@ -34,9 +34,6 @@ func (ck *Clerk) Trace(a ...interface{}) {
 		_, line := f.FileLine(pc[0])
 
 		log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime | log.Lshortfile))
-		// yellow := "\033[33m"
-		// reset := "\033[0m"
-		// log.Printf("%s%s@%d%s\n%s\n", yellow, f.Name(), line, reset, s)
 		log.Printf("%s@%d\nClerk: %s\n", f.Name(), line, s)
 	}
 }
@@ -54,9 +51,6 @@ func (kv *KVServer) Trace(a ...interface{}) {
 		_, line := f.FileLine(pc[0])
 
 		log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime | log.Lshortfile))
-		// yellow := "\033[33m"
-		// reset := "\033[0m"
-		// log.Printf("%s%s@%d%s\n%s\n", yellow, f.Name(), line, reset, s)
 		log.Printf("%s@%d\nKv(%d): %s\n", f.Name(), line, kv.me, s)
 	}
 }

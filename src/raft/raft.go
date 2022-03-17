@@ -73,9 +73,7 @@ type ApplyMsg struct {
 // A Go object implementing a single Raft peer.
 //
 type Raft struct {
-	mu      sync.Mutex // Lock to protect shared access to this peer's state
-	applyMu sync.Mutex // Lock to protect apply channel
-
+	mu sync.Mutex // Lock to protect shared access to this peer's state
 	// mu        deadlock.Mutex
 	peers     []*labrpc.ClientEnd // RPC end points of all peers
 	persister *Persister          // Object to hold this peer's persisted state
@@ -95,6 +93,7 @@ type Raft struct {
 	matchIndex  []int
 
 	applyCh      chan ApplyMsg
+	commandCh    chan ApplyMsg
 	stepDownCh   chan bool
 	wonElectonCh chan bool
 	heartbeatCh  chan bool
@@ -240,6 +239,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 	log := make([]LogEntry, 1)
 	log[0] = LogEntry{Term: startTerm}
 
+	N := 1000
 	rf := &Raft{
 		peers:     peers,
 		persister: persister,
@@ -256,10 +256,11 @@ func Make(peers []*labrpc.ClientEnd, me int,
 		// Channels have buffered space to not block
 		// which should avoid deadlock in some scenarios
 		applyCh:      applyCh,
-		stepDownCh:   make(chan bool, 100),
-		heartbeatCh:  make(chan bool, 100),
-		wonElectonCh: make(chan bool, 100),
-		killCh:       make(chan bool, 100),
+		commandCh:    make(chan ApplyMsg, N),
+		stepDownCh:   make(chan bool, N),
+		heartbeatCh:  make(chan bool, N),
+		wonElectonCh: make(chan bool, N),
+		killCh:       make(chan bool, N),
 
 		state:     FOLLOWER,
 		numPeers:  numPeers,
@@ -271,6 +272,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 	// start ticker goroutine to start elections
 	go rf.ticker()
+	go rf.applier()
 
 	return rf
 }

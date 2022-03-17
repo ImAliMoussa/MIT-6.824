@@ -1,6 +1,6 @@
 package kvraft
 
-import "time"
+// import "time"
 
 type GetArgs struct {
 	Key string
@@ -31,25 +31,23 @@ func (ck *Clerk) Get(key string) string {
 		Id:  nrand(),
 	}
 	server := ck.lastServer
+	ck.Trace("started new operation\nArgs:", PP(args))
 	for {
 		reply := GetReply{}
-		select {
-		case <-ck.GetRPC(server, &args, &reply):
-			if reply.Err == OK {
-				ck.lastServer = server
-				return reply.Value
-			}
-		case <-time.After(ClerkTimeout):
+
+		ck.Trace("sending get request to server", server, "\nArgs:", PP(args))
+		ck.servers[server].Call("KVServer.Get", &args, &reply)
+		ck.Trace(
+			"received put append request to server", server,
+			"\nArgs:", PP(args),
+			"\nReply:", PP(reply),
+		)
+
+		if reply.Err == OK {
+			ck.lastServer = server
+			ck.Trace("received new operation\nArgs:", PP(args), "\nReply:", PP(reply))
+			return reply.Value
 		}
 		server = (server + 1) % len(ck.servers)
 	}
-}
-
-func (ck *Clerk) GetRPC(server int, args *GetArgs, reply *GetReply) chan bool {
-	ch := make(chan bool, 1)
-	go func() {
-		ck.servers[server].Call("KVServer.Get", args, reply)
-		ch <- true
-	}()
-	return ch
 }

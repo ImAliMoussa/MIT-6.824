@@ -7,6 +7,8 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 		return
 	}
 
+	kv.Trace("received put request", "\nArgs:", PP(args))
+
 	_, exists := kv.IsDone(args.Id)
 	if exists {
 		reply.Err = OK
@@ -21,7 +23,9 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 	}
 
 	_, completed := kv.WaitAndGet(op)
-	if !completed {
+	_, isLeader = kv.rf.GetState()
+
+	if !completed || !isLeader {
 		reply.Err = ErrWrongLeader
 		return
 	}

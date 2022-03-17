@@ -1,11 +1,13 @@
 package kvraft
 
 func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
-	_, isLeader := kv.rf.GetState()
+	currTerm, isLeader := kv.rf.GetState()
 	if !isLeader {
 		reply.Err = ErrWrongLeader
 		return
 	}
+
+	kv.Trace("received get request", "\nArgs:", PP(args))
 
 	value, exists := kv.IsDone(args.Id)
 	if exists {
@@ -21,10 +23,13 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 	}
 
 	value, completed := kv.WaitAndGet(op)
-	if !completed {
+	newTerm, isLeader := kv.rf.GetState()
+
+	if !completed || !isLeader || currTerm != newTerm {
 		reply.Err = ErrWrongLeader
 		return
 	}
+
 	reply.Err = OK
 	reply.Value = value
 }

@@ -65,29 +65,26 @@ func (rf *Raft) updateCommitIndex() {
 	}
 }
 
+func (rf *Raft) applier() {
+	for !rf.killed() {
+		command := <-rf.commandCh
+		rf.applyCh <- command
+	}
+}
+
 func (rf *Raft) applyCommittedCommands() {
 	rf.mu.Lock()
-	rf.applyMu.Lock()
-	defer rf.applyMu.Unlock()
+	defer rf.mu.Unlock()
 	rf.Persist()
 
-	trace("Server", rf.me, "commit index:", rf.commitIndex)
-	commands := make([]ApplyMsg, 0)
 	for rf.lastApplied < rf.commitIndex {
 		rf.lastApplied++
-		applyMsg := ApplyMsg{
+		command := ApplyMsg{
 			CommandValid: true,
 			Command:      rf.getLog(rf.lastApplied).Command,
 			CommandIndex: rf.lastApplied,
 		}
-		commands = append(commands, applyMsg)
-	}
-	rf.lastApplied = rf.commitIndex
-	rf.mu.Unlock()
-
-	for _, applyMsg := range commands {
-		trace("Server", rf.me, "applied index", applyMsg.CommandIndex, "command:", applyMsg.Command)
-		rf.applyCh <- applyMsg
+		rf.commandCh <- command
 	}
 }
 
