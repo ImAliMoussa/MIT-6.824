@@ -2,7 +2,10 @@ package kvraft
 
 import (
 	"log"
-	"sync"
+
+	"github.com/sasha-s/go-deadlock"
+
+	// "sync"
 	"sync/atomic"
 
 	"6.824/labgob"
@@ -31,6 +34,7 @@ type Op struct {
 
 type KVServer struct {
 	// mu      sync.Mutex
+	mu      deadlock.Mutex
 	me      int
 	rf      *raft.Raft
 	applyCh chan raft.ApplyMsg
@@ -41,7 +45,6 @@ type KVServer struct {
 	keyValueDict map[string]string
 	completedOps map[int64]string
 	channelMap   map[int64]chan interface{}
-	mu           sync.Mutex
 }
 
 //
@@ -87,6 +90,8 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	labgob.Register(GetReply{})
 	labgob.Register(PutAppendArgs{})
 	labgob.Register(PutAppendReply{})
+
+	log.Println("Starting keyvalue server", me)
 
 	N := 100
 	applyCh := make(chan raft.ApplyMsg, N)

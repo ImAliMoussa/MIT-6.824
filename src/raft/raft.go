@@ -117,7 +117,6 @@ func (rf *Raft) isUpToDate(args *RequestVoteArgs) bool {
 		return lastTerm < args.LastLogTerm
 	}
 	return lengthOfLog <= (1 + args.LastLogIndex)
-
 }
 
 // return currentTerm and whether this server

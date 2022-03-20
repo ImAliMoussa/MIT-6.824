@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"runtime"
+	"strings"
 	"time"
 )
 
@@ -26,15 +27,13 @@ func (ck *Clerk) Trace(a ...interface{}) {
 	const Debug = 1
 
 	if Debug == 1 && os.Getenv("LOG") == "1" {
-		s := fmt.Sprintln(a...)
-
-		pc := make([]uintptr, 10)
-		runtime.Callers(2, pc)
-		f := runtime.FuncForPC(pc[0])
-		_, line := f.FileLine(pc[0])
-
 		log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime | log.Lshortfile))
-		log.Printf("%s@%d\nClerk: %s\n", f.Name(), line, s)
+		pc, filename, line, _ := runtime.Caller(1)
+		filenameTokens := strings.Split(filename, "/")
+		filename = filenameTokens[len(filenameTokens)-1]
+		funcName := runtime.FuncForPC(pc).Name()
+		s := fmt.Sprintln(a...)
+		log.Printf("%s[%s:%d]\nClerk: %s\n", funcName, filename, line, s)
 	}
 }
 
@@ -43,15 +42,13 @@ func (kv *KVServer) Trace(a ...interface{}) {
 	const Debug = 1
 
 	if Debug == 1 && os.Getenv("LOG") == "1" {
-		s := fmt.Sprintln(a...)
-
-		pc := make([]uintptr, 10)
-		runtime.Callers(2, pc)
-		f := runtime.FuncForPC(pc[0])
-		_, line := f.FileLine(pc[0])
-
 		log.SetFlags(log.Flags() &^ (log.Ldate | log.Ltime | log.Lshortfile))
-		log.Printf("%s@%d\nKv(%d): %s\n", f.Name(), line, kv.me, s)
+		pc, filename, line, _ := runtime.Caller(1)
+		filenameTokens := strings.Split(filename, "/")
+		filename = filenameTokens[len(filenameTokens)-1]
+		funcName := runtime.FuncForPC(pc).Name()
+		s := fmt.Sprintln(a...)
+		log.Printf("%s[%s:%d]\nKV(%d): %s\n", funcName, filename, line, kv.me, s)
 	}
 }
 
