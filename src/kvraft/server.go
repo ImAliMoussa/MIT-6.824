@@ -30,6 +30,7 @@ type Op struct {
 	Id    int64
 	Key   string
 	Value string
+	Term  int
 }
 
 type KVServer struct {
@@ -42,9 +43,10 @@ type KVServer struct {
 
 	maxraftstate int // snapshot if log grows this big
 	// Your definitions here.
-	keyValueDict map[string]string
-	completedOps map[int64]string
-	channelMap   map[int64]chan interface{}
+	lastLeaderTerm int
+	keyValueDict   map[string]string
+	completedOps   map[int64]string
+	channelMap     map[int64]chan interface{}
 }
 
 //

@@ -17,6 +17,7 @@ const (
 	PUT            = "PUT"
 	APPEND         = "APPEND"
 	GET            = "GET"
+	NO_OP          = "NO-OP"
 	ClerkTimeout   = 250 * time.Millisecond
 )
 

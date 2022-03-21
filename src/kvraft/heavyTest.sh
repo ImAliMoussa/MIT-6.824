@@ -8,4 +8,3 @@ do
     echo $i
     LOG=1 go test -race -timeout 70s -run $1 > $2 
 done
-

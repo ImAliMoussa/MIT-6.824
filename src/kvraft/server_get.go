@@ -20,6 +20,7 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 		Type: GET,
 		Id:   args.Id,
 		Key:  args.Key,
+		Term: currTerm,
 	}
 
 	value, completed := kv.WaitAndGet(op)
