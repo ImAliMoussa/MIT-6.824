@@ -182,6 +182,7 @@ func (rf *Raft) ticker() {
 		trace("Server", rf.me, "new tick.\nState", state,
 			"\nCurrentTerm:", rf.currentTerm,
 			"\nLogs:", rf.log,
+			"\nLogs length:", rf.logLength(),
 			"\nCommit index:", rf.commitIndex,
 			"\nMatch index", rf.matchIndex,
 			"\nNext index", rf.nextIndex,

@@ -417,7 +417,7 @@ func GenericTest(t *testing.T, part string, nclients int, nservers int, unreliab
 // Check that ops are committed fast enough, better than 1 per heartbeat interval
 func GenericTestSpeed(t *testing.T, part string, maxraftstate int) {
 	const nservers = 3
-	const numOps = 5
+	const numOps = 1000
 	cfg := make_config(t, nservers, false, maxraftstate)
 	defer cfg.cleanup()
 
@@ -583,10 +583,10 @@ func TestManyPartitionsOneClient3A(t *testing.T) {
 	GenericTest(t, "3A", 1, 5, false, false, true, -1, false)
 }
 
-// func TestManyPartitionsManyClients3A(t *testing.T) {
-// 	// Test: partitions, many clients (3A) ...
-// 	GenericTest(t, "3A", 5, 5, false, false, true, -1, false)
-// }
+func TestManyPartitionsManyClients3A(t *testing.T) {
+	// Test: partitions, many clients (3A) ...
+	GenericTest(t, "3A", 5, 5, false, false, true, -1, false)
+}
 
 func TestPersistOneClient3A(t *testing.T) {
 	// Test: restarts, one client (3A) ...

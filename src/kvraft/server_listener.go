@@ -14,6 +14,6 @@ func (kv *KVServer) listener() {
 		}
 
 		kv.Trace("listener received command", PP(op))
-		kv.MarkAsComplete(op)
+		kv.MarkAsComplete(op, command.CommandIndex)
 	}
 }

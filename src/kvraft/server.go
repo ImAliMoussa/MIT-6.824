@@ -30,6 +30,7 @@ type Op struct {
 	Id    int64
 	Key   string
 	Value string
+	Term  int
 }
 
 type KVServer struct {
@@ -42,9 +43,12 @@ type KVServer struct {
 
 	maxraftstate int // snapshot if log grows this big
 	// Your definitions here.
-	keyValueDict map[string]string
-	completedOps map[int64]string
-	channelMap   map[int64]chan interface{}
+	lastLeaderTerm int
+	keyValueDict   map[string]string
+	completedOps   map[int64]string
+	channelMap     map[int64]chan interface{}
+	commitIndex    int
+	commandIndex   map[int64]int
 }
 
 //
@@ -104,6 +108,7 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 		keyValueDict: make(map[string]string),
 		completedOps: make(map[int64]string),
 		channelMap:   make(map[int64]chan interface{}),
+		commandIndex: make(map[int64]int),
 	}
 
 	go kv.listener()

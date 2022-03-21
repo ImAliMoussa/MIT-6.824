@@ -1,7 +1,7 @@
 package kvraft
 
 func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
-	_, isLeader := kv.rf.GetState()
+	currTerm, isLeader := kv.rf.GetState()
 	if !isLeader {
 		reply.Err = ErrWrongLeader
 		return
@@ -20,6 +20,7 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 		Id:    args.Id,
 		Key:   args.Key,
 		Value: args.Value,
+		Term:  currTerm,
 	}
 
 	_, completed := kv.WaitAndGet(op)
