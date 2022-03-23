@@ -1,6 +1,8 @@
 package kvraft
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func (kv *KVServer) listener() {
 	for !kv.killed() {
