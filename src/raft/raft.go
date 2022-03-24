@@ -99,9 +99,10 @@ type Raft struct {
 	heartbeatCh  chan bool
 	killCh       chan bool
 
-	state     RaftState
-	numPeers  int
-	baseIndex int
+	state         RaftState
+	numPeers      int
+	baseIndex     int
+	skipBroadcast bool
 }
 
 // Raft determines which of two logs is more up-to-date
@@ -164,6 +165,8 @@ func (rf *Raft) Start(command interface{}) (int, int, bool) {
 			Command: command,
 		}
 		rf.log = append(rf.log, entry)
+		go rf.broadcastAppendEntries()
+		rf.skipBroadcast = true
 	}
 
 	return index, term, isLeader
@@ -179,6 +182,8 @@ func (rf *Raft) ticker() {
 	for !rf.killed() {
 		rf.mu.Lock()
 		state := rf.state
+		skip := rf.skipBroadcast
+		rf.skipBroadcast = false
 		trace("Server", rf.me, "new tick.\nState", state,
 			"\nCurrentTerm:", rf.currentTerm,
 			"\nLogs:", rf.log,
@@ -196,7 +201,9 @@ func (rf *Raft) ticker() {
 		switch state {
 		case LEADER:
 			timeout = LEADER_TIMEOUT
-			go rf.broadcastAppendEntries()
+			if !skip {
+				go rf.broadcastAppendEntries()
+			}
 		case CANDIDATE:
 			go rf.startElection()
 		}

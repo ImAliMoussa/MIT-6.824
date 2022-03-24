@@ -95,8 +95,6 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	labgob.Register(PutAppendArgs{})
 	labgob.Register(PutAppendReply{})
 
-	log.Println("Starting keyvalue server", me)
-
 	N := 100
 	applyCh := make(chan raft.ApplyMsg, N)
 

@@ -1,15 +1,12 @@
 package kvraft
 
 import (
-	"log"
 	"time"
 )
 
 func (kv *KVServer) IsDone(id int64) (string, bool) {
-	start := time.Now()
 	kv.mu.Lock()
 	defer kv.mu.Unlock()
-	log.Println("Isdone took", time.Since(start))
 
 	value, exists := kv.completedOps[id]
 	return value, exists
