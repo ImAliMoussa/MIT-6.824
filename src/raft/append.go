@@ -121,7 +121,7 @@ func (rf *Raft) sendAppendEntries(server, term int) {
 	// an entry with the old term. This has bad consequences.
 	//
 
-	if rf.state != LEADER {
+	if rf.state != LEADER || rf.nextIndex[server] <= rf.baseIndex {
 		rf.mu.Unlock()
 		return
 	}
@@ -194,6 +194,10 @@ func (rf *Raft) AppendEntries(args *AppendEntriesRequest, reply *AppendEntriesRe
 	}
 	// Reply false if log doesn’t contain an entry at prevLogIndex
 	// whose term matches prevLogTerm (§5.3)
+	if args.PrevLogIndex < rf.baseIndex {
+		args.Entries = args.Entries[min(rf.baseIndex-args.PrevLogIndex, len(args.Entries)):len(args.Entries)]
+		args.PrevLogIndex = rf.baseIndex
+	}
 	differentTerms := (args.PrevLogIndex >= rf.logLength()) ||
 		(rf.getLog(args.PrevLogIndex).Term != args.PrevLogTerm)
 

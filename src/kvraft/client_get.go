@@ -31,7 +31,7 @@ func (ck *Clerk) Get(key string) string {
 		Id:  nrand(),
 	}
 	server := ck.lastServer
-	ck.Trace("started new operation\nArgs:", PP(args))
+	ck.Trace("started new operation with id, ", args.Id, ". \nArgs:", PP(args))
 	for {
 		reply := GetReply{}
 
@@ -45,7 +45,8 @@ func (ck *Clerk) Get(key string) string {
 
 		if reply.Err == OK {
 			ck.lastServer = server
-			ck.Trace("received new operation\nArgs:", PP(args), "\nReply:", PP(reply))
+			ck.Trace("received new operation with id:", args.Id,
+				"\nArgs:", PP(args), "\nReply:", PP(reply))
 			return reply.Value
 		}
 		server = (server + 1) % len(ck.servers)

@@ -34,7 +34,7 @@ func (ck *Clerk) PutAppend(key string, value string, op string) {
 		Op:    op,
 		Id:    nrand(),
 	}
-	ck.Trace("started new operation\nArgs:", PP(args))
+	ck.Trace("started new operation with id, ", args.Id, ". \nArgs:", PP(args))
 	server := ck.lastServer
 	for {
 		reply := PutAppendReply{}
@@ -42,13 +42,14 @@ func (ck *Clerk) PutAppend(key string, value string, op string) {
 		ck.Trace("sending put append request to server", server, "\nArgs:", PP(args))
 		ck.servers[server].Call("KVServer.PutAppend", &args, &reply)
 		ck.Trace(
-			"received put append request to server", server,
+			"received put append request to server", server, "with id", args.Id,
 			"\nArgs:", PP(args),
 			"\nReply:", PP(reply),
 		)
 
 		if reply.Err == OK {
-			ck.Trace("received new operation\nArgs:", PP(args), "\nReply:", PP(reply))
+			ck.Trace("received new operation with id:", args.Id,
+				"\nArgs:", PP(args), "\nReply:", PP(reply))
 			ck.lastServer = server
 			return
 		}

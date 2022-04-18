@@ -1,6 +1,7 @@
 package raft
 
 func (rf *Raft) getLog(i int) LogEntry {
+	trace("Server", rf.me, "getting log", i, "with base index", rf.baseIndex)
 	return rf.log[i-rf.baseIndex]
 }
 

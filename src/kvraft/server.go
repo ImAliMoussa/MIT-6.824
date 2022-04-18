@@ -47,6 +47,8 @@ type KVServer struct {
 	keyValueDict   map[string]string
 	completedOps   map[int64]string
 	channelMap     map[int64]chan interface{}
+	commitIndex    int
+	commandIndex   map[int64]int
 }
 
 //
@@ -93,8 +95,6 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	labgob.Register(PutAppendArgs{})
 	labgob.Register(PutAppendReply{})
 
-	log.Println("Starting keyvalue server", me)
-
 	N := 100
 	applyCh := make(chan raft.ApplyMsg, N)
 
@@ -106,6 +106,7 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 		keyValueDict: make(map[string]string),
 		completedOps: make(map[int64]string),
 		channelMap:   make(map[int64]chan interface{}),
+		commandIndex: make(map[int64]int),
 	}
 
 	go kv.listener()

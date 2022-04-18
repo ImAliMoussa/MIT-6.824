@@ -5,9 +5,7 @@ import (
 )
 
 func (kv *KVServer) IsDone(id int64) (string, bool) {
-	kv.Trace("Requesting lock")
 	kv.mu.Lock()
-	kv.Trace("Received lock")
 	defer kv.mu.Unlock()
 
 	value, exists := kv.completedOps[id]
@@ -19,15 +17,31 @@ func (kv *KVServer) WaitAndGet(op Op) (string, bool) {
 
 	kv.mu.Lock()
 	kv.Trace("Operation:", PP(op), "\nCurrent term:", kv.lastLeaderTerm)
-	if _, exists := kv.channelMap[id]; !exists {
+	_, exists := kv.channelMap[id]
+	kv.Trace("Operation:", PP(op), "exists:", exists)
+	if !exists {
+		index, _, isLeader := kv.rf.Start(op)
+		if !isLeader {
+			kv.mu.Unlock()
+			return "", false
+		}
 		kv.channelMap[id] = make(chan interface{}, 10)
+		kv.commandIndex[id] = index
 		kv.Trace("Started op", op)
-		go kv.rf.Start(op)
 	} else if op.Term > kv.lastLeaderTerm {
-		go kv.rf.Start(Op{
+		kv.rf.Start(Op{
 			Type: NO_OP,
 		})
 		kv.lastLeaderTerm = op.Term
+	}
+
+	if kv.commitIndex > kv.commandIndex[id] {
+		index, _, isLeader := kv.rf.Start(op)
+		if !isLeader {
+			kv.mu.Unlock()
+			return "", false
+		}
+		kv.commandIndex[id] = index
 	}
 
 	channel := kv.channelMap[id]
@@ -47,13 +61,17 @@ func (kv *KVServer) WaitAndGet(op Op) (string, bool) {
 	return value, exists
 }
 
-func (kv *KVServer) MarkAsComplete(operation Op) {
+func (kv *KVServer) MarkAsComplete(operation Op, index int) {
 	kv.Trace("Requesting lock")
 	kv.mu.Lock()
 	kv.Trace("Received lock")
 	defer kv.mu.Unlock()
 	if operation.Term > kv.lastLeaderTerm {
 		kv.lastLeaderTerm = operation.Term
+	}
+
+	if index > kv.commitIndex {
+		kv.commitIndex = index
 	}
 
 	if operation.Type == NO_OP {

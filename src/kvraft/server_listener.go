@@ -1,6 +1,8 @@
 package kvraft
 
-import "fmt"
+import (
+	"fmt"
+)
 
 func (kv *KVServer) listener() {
 	for !kv.killed() {
@@ -14,6 +16,6 @@ func (kv *KVServer) listener() {
 		}
 
 		kv.Trace("listener received command", PP(op))
-		kv.MarkAsComplete(op)
+		kv.MarkAsComplete(op, command.CommandIndex)
 	}
 }
