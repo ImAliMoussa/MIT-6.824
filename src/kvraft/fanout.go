@@ -29,6 +29,8 @@ func (kv *KVServer) WaitAndGet(op Op) (string, bool) {
 		kv.commandIndex[id] = index
 		kv.Trace("Started op", op)
 	} else if op.Term > kv.lastLeaderTerm {
+		// Operation was submmitted to an old leader which lost leadership or was part of a minority.
+		// So we should send the operation again to the new leader.
 		kv.rf.Start(Op{
 			Type: NO_OP,
 		})
@@ -74,6 +76,10 @@ func (kv *KVServer) MarkAsComplete(operation Op, index int) {
 		kv.commitIndex = index
 	}
 
+	if kv.maxraftstate != -1 && kv.rf.Persistor().RaftStateSize() > kv.maxraftstate {
+		go kv.snapshotData(index)
+	}
+
 	if operation.Type == NO_OP {
 		return
 	}
@@ -90,6 +96,7 @@ func (kv *KVServer) MarkAsComplete(operation Op, index int) {
 }
 
 func (kv *KVServer) execute(operation Op) {
+	kv.Trace("executing command", PP(operation))
 	if operation.Type == GET || operation.Type == NO_OP {
 		// do nothing
 	} else if operation.Type == PUT {

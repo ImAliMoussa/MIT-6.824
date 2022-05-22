@@ -32,26 +32,28 @@ func (ck *Clerk) PutAppend(key string, value string, op string) {
 		Key:   key,
 		Value: value,
 		Op:    op,
-		Id:    nrand(),
+		Id:    ck.getId(),
 	}
-	ck.Trace("started new operation with id, ", args.Id, ". \nArgs:", PP(args))
+	ck.Trace("started new operation with id", args.Id, "\nArgs:", PP(args))
 	server := ck.lastServer
 	for {
 		reply := PutAppendReply{}
 
 		ck.Trace("sending put append request to server", server, "\nArgs:", PP(args))
-		ck.servers[server].Call("KVServer.PutAppend", &args, &reply)
-		ck.Trace(
-			"received put append request to server", server, "with id", args.Id,
-			"\nArgs:", PP(args),
-			"\nReply:", PP(reply),
-		)
+		ok := ck.sendRPC(server, "KVServer.PutAppend", &args, &reply)
+		if ok {
+			ck.Trace(
+				"received put append request to server", server, "with id", args.Id,
+				"\nArgs:", PP(args),
+				"\nReply:", PP(reply),
+			)
 
-		if reply.Err == OK {
-			ck.Trace("received new operation with id:", args.Id,
-				"\nArgs:", PP(args), "\nReply:", PP(reply))
-			ck.lastServer = server
-			return
+			if reply.Err == OK {
+				ck.Trace("received new operation with id:", args.Id,
+					"\nArgs:", PP(args), "\nReply:", PP(reply))
+				ck.lastServer = server
+				return
+			}
 		}
 		server = (server + 1) % len(ck.servers)
 	}

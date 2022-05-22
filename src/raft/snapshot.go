@@ -13,9 +13,7 @@ type InstallSnapshotRes struct {
 }
 
 func (rf *Raft) InstallSnapshot(args *InstallSnapshotReq, reply *InstallSnapshotRes) {
-	trace("Server", rf.me, "is trying to acquire lock")
 	rf.mu.Lock()
-	trace("Server", rf.me, "has acquired the lock")
 	reply.Term = rf.currentTerm
 	if args.Term < rf.currentTerm || args.LastIncludedIndex <= rf.baseIndex {
 		rf.mu.Unlock()
@@ -43,7 +41,6 @@ func (rf *Raft) InstallSnapshot(args *InstallSnapshotReq, reply *InstallSnapshot
 	rf.Persist()
 	trace("Server", rf.me, "has persisted state successfully")
 	rf.mu.Unlock()
-	trace("Server", rf.me, "has released the lock")
 
 	command := ApplyMsg{
 		CommandValid:  false,

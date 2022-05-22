@@ -75,7 +75,7 @@ func (rf *Raft) applier() {
 func (rf *Raft) applyCommittedCommands() {
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
-	rf.Persist()
+	// rf.Persist()
 
 	for rf.lastApplied < rf.commitIndex {
 		rf.lastApplied++

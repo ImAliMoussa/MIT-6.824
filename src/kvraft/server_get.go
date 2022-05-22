@@ -31,6 +31,8 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 		return
 	}
 
+	kv.Trace("returning get request of id", args.Id, "with value", value)
+
 	reply.Err = OK
 	reply.Value = value
 }

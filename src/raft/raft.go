@@ -19,9 +19,9 @@ package raft
 
 import (
 	//	"bytes"
-	// "github.com/sasha-s/go-deadlock"
+	"github.com/sasha-s/go-deadlock"
 	"math/rand"
-	"sync"
+	// "sync"
 	"time"
 
 	//	"6.824/labgob"
@@ -73,8 +73,8 @@ type ApplyMsg struct {
 // A Go object implementing a single Raft peer.
 //
 type Raft struct {
-	mu sync.Mutex // Lock to protect shared access to this peer's state
-	// mu        deadlock.Mutex
+	// mu sync.Mutex // Lock to protect shared access to this peer's state
+	mu        deadlock.Mutex
 	peers     []*labrpc.ClientEnd // RPC end points of all peers
 	persister *Persister          // Object to hold this peer's persisted state
 	me        int                 // this peer's index into peers[]
@@ -192,6 +192,7 @@ func (rf *Raft) ticker() {
 			"\nMatch index", rf.matchIndex,
 			"\nNext index", rf.nextIndex,
 			"\nVoted for", rf.votedFor,
+			"\nBase index", rf.baseIndex,
 		)
 		rf.mu.Unlock()
 
@@ -222,6 +223,10 @@ func (rf *Raft) ticker() {
 		}
 	}
 	trace("Server", rf.me, "has exited properly")
+}
+
+func (rf *Raft) ResetLastApplied() {
+	rf.lastApplied = max(0, rf.baseIndex-1)
 }
 
 //
@@ -276,6 +281,7 @@ func Make(peers []*labrpc.ClientEnd, me int,
 
 	// initialize from state persisted before a crash
 	rf.ReadPersist(persister.ReadRaftState())
+	trace("Server", rf.me, "just woke up with logs", rf.log)
 
 	// start ticker goroutine to start elections
 	go rf.ticker()

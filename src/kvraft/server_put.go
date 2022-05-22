@@ -30,5 +30,6 @@ func (kv *KVServer) PutAppend(args *PutAppendArgs, reply *PutAppendReply) {
 		reply.Err = ErrWrongLeader
 		return
 	}
+	kv.Trace("returning get request of id", args.Id)
 	reply.Err = OK
 }

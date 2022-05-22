@@ -95,7 +95,7 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 	labgob.Register(PutAppendArgs{})
 	labgob.Register(PutAppendReply{})
 
-	N := 100
+	N := 1000
 	applyCh := make(chan raft.ApplyMsg, N)
 
 	kv := &KVServer{
@@ -108,6 +108,15 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 		channelMap:   make(map[int64]chan interface{}),
 		commandIndex: make(map[int64]int),
 	}
+
+	data := kv.rf.Persistor().ReadSnapshot()
+	kv.readSnapshot(data)
+
+	if len(kv.keyValueDict) > 0 {
+		kv.rf.ResetLastApplied()
+	}
+
+	kv.Trace("Started server with key value dict", PP(kv.keyValueDict))
 
 	go kv.listener()
 

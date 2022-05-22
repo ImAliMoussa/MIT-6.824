@@ -1,7 +1,5 @@
 package kvraft
 
-// import "time"
-
 type GetArgs struct {
 	Key string
 	Id  int64
@@ -28,26 +26,29 @@ type GetReply struct {
 func (ck *Clerk) Get(key string) string {
 	args := GetArgs{
 		Key: key,
-		Id:  nrand(),
+		Id:  ck.getId(),
 	}
 	server := ck.lastServer
-	ck.Trace("started new operation with id, ", args.Id, ". \nArgs:", PP(args))
+	ck.Trace("started new operation with id", args.Id, ". \nArgs:", PP(args))
 	for {
 		reply := GetReply{}
 
-		ck.Trace("sending get request to server", server, "\nArgs:", PP(args))
-		ck.servers[server].Call("KVServer.Get", &args, &reply)
-		ck.Trace(
-			"received put append request to server", server,
-			"\nArgs:", PP(args),
-			"\nReply:", PP(reply),
-		)
+		ck.Trace("sending get request to server", server, "with id", args.Id, "\nArgs:", PP(args))
+		// ck.servers[server].Call("KVServer.Get", &args, &reply)
+		ok := ck.sendRPCGet(server, "KVServer.Get", &args, &reply)
+		if ok {
+			ck.Trace(
+				"received get request to server", server,
+				"\nArgs:", PP(args),
+				"\nReply:", PP(reply),
+			)
 
-		if reply.Err == OK {
-			ck.lastServer = server
-			ck.Trace("received new operation with id:", args.Id,
-				"\nArgs:", PP(args), "\nReply:", PP(reply))
-			return reply.Value
+			if reply.Err == OK {
+				ck.lastServer = server
+				ck.Trace("received new operation with id:", args.Id,
+					"\nArgs:", PP(args), "\nReply:", PP(reply))
+				return reply.Value
+			}
 		}
 		server = (server + 1) % len(ck.servers)
 	}

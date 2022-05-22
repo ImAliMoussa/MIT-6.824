@@ -12,6 +12,10 @@ type Clerk struct {
 	lastServer int
 }
 
+func (ck *Clerk) getId() int64 {
+	return nrand()
+}
+
 func nrand() int64 {
 	max := big.NewInt(int64(1) << 62)
 	bigx, _ := rand.Int(rand.Reader, max)

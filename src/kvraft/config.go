@@ -79,15 +79,17 @@ func (cfg *config) cleanup() {
 }
 
 // Maximum log size across all servers
-func (cfg *config) LogSize() int {
+func (cfg *config) LogSize() (int, int) {
 	logsize := 0
+	maxSize := 0
 	for i := 0; i < cfg.n; i++ {
 		n := cfg.saved[i].RaftStateSize()
 		if n > logsize {
 			logsize = n
+			maxSize = i
 		}
 	}
-	return logsize
+	return logsize, maxSize
 }
 
 // Maximum snapshot size across all servers

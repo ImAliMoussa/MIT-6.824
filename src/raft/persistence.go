@@ -73,7 +73,7 @@ func (rf *Raft) CondInstallSnapshot(lastIncludedTerm int, lastIncludedIndex int,
 	rf.mu.Lock()
 	defer rf.mu.Unlock()
 
-	if lastIncludedIndex <= rf.baseIndex || rf.lastApplied > lastIncludedIndex {
+	if lastIncludedIndex < rf.baseIndex || rf.lastApplied > lastIncludedIndex {
 		return false
 	}
 
@@ -116,8 +116,10 @@ func (rf *Raft) Snapshot(baseIndex int, snapshot []byte) {
 	defer rf.mu.Unlock()
 
 	if baseIndex <= rf.baseIndex || baseIndex >= rf.logLength() {
-		errMsg := fmt.Sprintln("Out of range index:", baseIndex, "base index is:", rf.baseIndex)
-		panic(errMsg)
+		errMsg := fmt.Sprintln("Out of range index:", baseIndex, "base index is:", rf.baseIndex, "log length", rf.logLength())
+		// panic(errMsg)
+		trace("Server", rf.me, errMsg)
+		return
 	}
 
 	rf.log = rf.sliceLog(baseIndex, rf.logLength())
@@ -125,6 +127,7 @@ func (rf *Raft) Snapshot(baseIndex int, snapshot []byte) {
 	rf.lastApplied = baseIndex
 
 	raftState := rf.getRaftState()
+
 	rf.persister.SaveStateAndSnapshot(raftState, snapshot)
 
 	trace("Server", rf.me, "is releasing the lock")
