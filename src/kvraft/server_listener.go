@@ -8,7 +8,8 @@ func (kv *KVServer) listener() {
 	for !kv.killed() {
 		command := <-kv.applyCh
 		kv.Trace(PP(command))
-		kv.Trace("KeyValueDict", PP(kv.keyValueDict))
+		// kv.Trace("Sessions", PP(kv.sessions))
+		// kv.Trace("KeyValueDict", PP(kv.keyValueDict))
 
 		if command.SnapshotValid {
 			kv.Trace("made snapshot for index", command.SnapshotIndex)
@@ -30,7 +31,9 @@ func (kv *KVServer) listener() {
 			panic(e)
 		}
 
-		kv.Trace("listener received command", PP(op))
+		// kv.Trace("listener received command", PP(op))
 		kv.MarkAsComplete(op, command.CommandIndex)
+		// kv.Trace("Sessions after executing id", op.Id, "from client", op.Client, PP(kv.sessions))
+		// kv.Trace("KeyValueDict after executing id ", op.Id, "from client", op.Client, (kv.keyValueDict))
 	}
 }

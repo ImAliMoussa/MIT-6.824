@@ -1,8 +1,10 @@
 package kvraft
 
 import (
-	"6.824/labgob"
 	"bytes"
+	"fmt"
+
+	"6.824/labgob"
 )
 
 func (kv *KVServer) snapshotData(index int) {
@@ -13,10 +15,17 @@ func (kv *KVServer) snapshotData(index int) {
 
 	kv.mu.Lock()
 	kvDict := kv.keyValueDict
-	ops := kv.completedOps
+	// sessions := kv.sessions
+	sessions := make(map[int]ClientSession, 0)
+	for key, val := range kv.sessions {
+		sessions[key] = *val
+		kv.Trace("snapshotting saving", PP(key), PP(val.LastCompleted))
+	}
+
+	kv.Trace("Saving data", PP(kvDict), PP(sessions))
 
 	e.Encode(kvDict)
-	e.Encode(ops)
+	e.Encode(sessions)
 	kv.mu.Unlock()
 
 	data := buffer.Bytes()
@@ -27,16 +36,29 @@ func (kv *KVServer) readSnapshot(data []byte) {
 	r := bytes.NewBuffer(data)
 	d := labgob.NewDecoder(r)
 	var kvDict map[string]string
-	var ops map[int64]string
+	var sessions map[int]ClientSession
 
 	if d.Decode(&kvDict) != nil ||
-		d.Decode(&ops) != nil {
-		// panic("Decode error in readSnapshot")
+		d.Decode(&sessions) != nil {
+		kv.Trace("Decode error in readSnapshot")
 	} else {
 		kv.mu.Lock()
 		defer kv.mu.Unlock()
 		kv.keyValueDict = kvDict
-		kv.completedOps = ops
-		kv.Trace("Just woke up", "Dict: ", PP(kv.keyValueDict))
+		kv.sessions = make(map[int]*ClientSession)
+		for key, val := range sessions {
+			kv.sessions[key] = &ClientSession{
+				LastCompleted:       val.LastCompleted,
+				LastCompletedResult: val.LastCompletedResult,
+			}
+			kv.Trace("snapshotting restoring", PP(key), PP(kv.sessions[key].LastCompleted))
+		}
+
+		for key, val := range sessions {
+			if val.LastCompleted != kv.sessions[key].LastCompleted {
+				e := fmt.Sprintf("kv %d %d %d\n", key, val.LastCompleted, kv.sessions[key].LastCompleted)
+				panic(e)
+			}
+		}
 	}
 }

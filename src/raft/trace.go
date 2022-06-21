@@ -9,7 +9,7 @@ import (
 )
 
 // Debugging
-const Debug = 1
+const Debug = 0
 
 func trace(a ...interface{}) {
 	if Debug == 1 && os.Getenv("LOG") == "1" {

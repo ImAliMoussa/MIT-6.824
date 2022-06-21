@@ -697,9 +697,9 @@ func TestSnapshotSize3B(t *testing.T) {
 	cfg.end()
 }
 
-// func TestSpeed3B(t *testing.T) {
-// 	GenericTestSpeed(t, "3B", 1000)
-// }
+func TestSpeed3B(t *testing.T) {
+	GenericTestSpeed(t, "3B", 1000)
+}
 
 func TestSnapshotRecover3B(t *testing.T) {
 	// Test: restarts, snapshots, one client (3B) ...
@@ -733,7 +733,7 @@ func TestSnapshotUnreliableRecoverConcurrentPartitionLinearizable3B(t *testing.T
 
 func TestMyStuff(t *testing.T) {
 	nservers := 5
-	maxraftstate := 1000
+	maxraftstate := 10
 	unreliable := false
 	cfg := make_config(t, nservers, unreliable, maxraftstate)
 	defer cfg.cleanup()
@@ -744,12 +744,13 @@ func TestMyStuff(t *testing.T) {
 
 	time.Sleep(1 * time.Second)
 
-	N := 5
+	N := 1000
 	ans := ""
 	for i := 0; i < N; i++ {
 		value := strconv.Itoa(i)
 		ans += value
 		ck.Append("0", value)
+		log.Println(i)
 	}
 
 	for i := 0; i < nservers; i++ {

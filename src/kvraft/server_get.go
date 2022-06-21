@@ -9,7 +9,7 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 
 	kv.Trace("received get request", "\nArgs:", PP(args))
 
-	value, exists := kv.IsDone(args.Id)
+	value, exists := kv.IsDone(args.Id, args.ClientId)
 	if exists {
 		reply.Err = OK
 		reply.Value = value
@@ -17,13 +17,14 @@ func (kv *KVServer) Get(args *GetArgs, reply *GetReply) {
 	}
 
 	op := Op{
-		Type: GET,
-		Id:   args.Id,
-		Key:  args.Key,
-		Term: currTerm,
+		Type:   GET,
+		Id:     args.Id,
+		Key:    args.Key,
+		Term:   currTerm,
+		Client: args.ClientId,
 	}
 
-	value, completed := kv.WaitAndGet(op)
+	value, completed := kv.WaitAndGet(op, args.ClientId)
 	newTerm, isLeader := kv.rf.GetState()
 
 	if !completed || !isLeader || currTerm != newTerm {

@@ -3,17 +3,24 @@ package kvraft
 import (
 	"crypto/rand"
 	"math/big"
+	"sync/atomic"
 
 	"6.824/labrpc"
 )
 
+var clients int32 = 0
+
 type Clerk struct {
 	servers    []*labrpc.ClientEnd
 	lastServer int
+	clientId   int
+	req        int64
 }
 
 func (ck *Clerk) getId() int64 {
-	return nrand()
+	// return nrand()
+	ck.req++
+	return ck.req
 }
 
 func nrand() int64 {
@@ -24,9 +31,12 @@ func nrand() int64 {
 }
 
 func MakeClerk(servers []*labrpc.ClientEnd) *Clerk {
+	clients++
 	ck := &Clerk{
 		servers:    servers,
 		lastServer: 0,
+		clientId:   int(atomic.AddInt32(&clients, 1)),
+		req:        0,
 	}
 	return ck
 }

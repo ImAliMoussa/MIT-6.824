@@ -10,7 +10,8 @@ type PutAppendArgs struct {
 	// You'll have to add definitions here.
 	// Field names must start with capital letters,
 	// otherwise RPC will break.
-	Id int64
+	Id       int64
+	ClientId int
 }
 
 type PutAppendReply struct {
@@ -29,10 +30,11 @@ type PutAppendReply struct {
 //
 func (ck *Clerk) PutAppend(key string, value string, op string) {
 	args := PutAppendArgs{
-		Key:   key,
-		Value: value,
-		Op:    op,
-		Id:    ck.getId(),
+		Key:      key,
+		Value:    value,
+		Op:       op,
+		Id:       ck.getId(),
+		ClientId: ck.clientId,
 	}
 	ck.Trace("started new operation with id", args.Id, "\nArgs:", PP(args))
 	server := ck.lastServer

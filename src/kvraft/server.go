@@ -5,7 +5,6 @@ import (
 
 	"github.com/sasha-s/go-deadlock"
 
-	// "sync"
 	"sync/atomic"
 
 	"6.824/labgob"
@@ -26,11 +25,17 @@ type Op struct {
 	// Your definitions here.
 	// Field names must start with capital letters,
 	// otherwise RPC will break.
-	Type  string
-	Id    int64
-	Key   string
-	Value string
-	Term  int
+	Type   string
+	Id     int64
+	Client int
+	Key    string
+	Value  string
+	Term   int
+}
+
+type ClientSession struct {
+	LastCompleted       int64
+	LastCompletedResult string
 }
 
 type KVServer struct {
@@ -45,8 +50,8 @@ type KVServer struct {
 	// Your definitions here.
 	lastLeaderTerm int
 	keyValueDict   map[string]string
-	completedOps   map[int64]string
-	channelMap     map[int64]chan interface{}
+	sessions       map[int]*ClientSession
+	channelMap     map[int]map[int64]chan interface{}
 	commitIndex    int
 	commandIndex   map[int64]int
 }
@@ -104,8 +109,8 @@ func StartKVServer(servers []*labrpc.ClientEnd, me int, persister *raft.Persiste
 		applyCh:      applyCh,
 		rf:           raft.Make(servers, me, persister, applyCh),
 		keyValueDict: make(map[string]string),
-		completedOps: make(map[int64]string),
-		channelMap:   make(map[int64]chan interface{}),
+		sessions:     make(map[int]*ClientSession),
+		channelMap:   make(map[int]map[int64]chan interface{}),
 		commandIndex: make(map[int64]int),
 	}
 

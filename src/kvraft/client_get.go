@@ -4,6 +4,7 @@ type GetArgs struct {
 	Key string
 	Id  int64
 	// You'll have to add definitions here.
+	ClientId int
 }
 
 type GetReply struct {
@@ -25,8 +26,9 @@ type GetReply struct {
 //
 func (ck *Clerk) Get(key string) string {
 	args := GetArgs{
-		Key: key,
-		Id:  ck.getId(),
+		Key:      key,
+		Id:       ck.getId(),
+		ClientId: ck.clientId,
 	}
 	server := ck.lastServer
 	ck.Trace("started new operation with id", args.Id, ". \nArgs:", PP(args))
@@ -34,7 +36,6 @@ func (ck *Clerk) Get(key string) string {
 		reply := GetReply{}
 
 		ck.Trace("sending get request to server", server, "with id", args.Id, "\nArgs:", PP(args))
-		// ck.servers[server].Call("KVServer.Get", &args, &reply)
 		ok := ck.sendRPCGet(server, "KVServer.Get", &args, &reply)
 		if ok {
 			ck.Trace(

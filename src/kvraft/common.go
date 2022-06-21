@@ -34,7 +34,7 @@ func (ck *Clerk) Trace(a ...interface{}) {
 		filename = filenameTokens[len(filenameTokens)-1]
 		funcName := runtime.FuncForPC(pc).Name()
 		s := fmt.Sprintln(a...)
-		log.Printf("%s[%s:%d]\nClerk: %s\n", funcName, filename, line, s)
+		log.Printf("%s[%s:%d]\nClerk(%d): %s\n", funcName, filename, line, ck.clientId, s)
 	}
 }
 
