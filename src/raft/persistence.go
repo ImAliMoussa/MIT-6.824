@@ -87,6 +87,7 @@ func (rf *Raft) CondInstallSnapshot(lastIncludedTerm int, lastIncludedIndex int,
 	rf.log[0].Term = lastIncludedTerm
 	rf.baseIndex = lastIncludedIndex
 	rf.lastApplied = rf.baseIndex
+	rf.commitIndex = max(rf.commitIndex, rf.baseIndex)
 
 	raftState := rf.getRaftState()
 	rf.persister.SaveStateAndSnapshot(raftState, snapshot)
@@ -125,6 +126,7 @@ func (rf *Raft) Snapshot(baseIndex int, snapshot []byte) {
 	rf.log = rf.sliceLog(baseIndex, rf.logLength())
 	rf.baseIndex = baseIndex
 	rf.lastApplied = baseIndex
+	rf.commitIndex = max(rf.commitIndex, rf.baseIndex)
 
 	raftState := rf.getRaftState()
 
